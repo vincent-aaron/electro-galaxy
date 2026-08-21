@@ -2,8 +2,6 @@
 
 **Electro Galaxy** is a modern, full-featured e-commerce platform for premium electronics and smart appliances, built for the Philippine market. It combines a sleek "galaxy" themed UI with a production-ready Supabase backend and a seamless mock-data fallback for development.
 
-> This README is maintained continuously as the project evolves. Update it whenever features, architecture, or workflows change.
-
 ---
 
 ## ✨ Features
@@ -80,9 +78,6 @@ npm install
 
 Copy `.env.example` to `.env` and fill in your Supabase values:
 
-```bash
-cp .env.example .env
-```
 
 | Variable                        | Required | Description                      |
 | ------------------------------- | -------- | -------------------------------- |
