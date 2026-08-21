@@ -63,57 +63,6 @@
 
 ---
 
-## 📁 Repository Structure
-
-```
-src/
-├── app/
-│   ├── page.tsx                 # Homepage
-│   ├── layout.tsx               # Root layout (Header + Footer)
-│   ├── about/                   # About page
-│   ├── account/                 # User dashboard
-│   │   ├── orders/              # Order history
-│   │   ├── wishlist/            # Saved products
-│   │   └── addresses/           # Address book
-│   ├── api/
-│   │   ├── addresses/           # Address CRUD
-│   │   ├── contact/             # Contact form submission
-│   │   ├── orders/              # Order create + list
-│   │   └── products/            # Product listing
-│   ├── auth/                    # Login, register & password recovery screens
-│   ├── cart/                    # Shopping cart
-│   ├── checkout/                # Checkout flow
-│   ├── policies/                # Privacy & returns
-│   ├── products/                # Catalog + detail
-│   ├── services/                # Services page
-│   ├── contact/                 # Contact page
-│   └── not-found.tsx            # Custom 404
-├── components/
-│   ├── layout/                  # Header, Footer
-│   ├── products/                # ProductCard, CategoryCard
-│   ├── ai/                      # Galaxy Assistant (AI chat widget)
-│   └── ui/                      # Breadcrumbs, Toast
-├── lib/
-│   ├── data/                    # Product loaders + mock data
-│   ├── supabase/                # Supabase clients
-│   └── utils.ts                 # Helpers (formatting, pricing)
-├── store/
-│   ├── cart-store.ts            # Persistent cart
-│   └── wishlist-store.ts        # Persistent wishlist
-└── types/
-    └── database.ts              # Shared TypeScript types
-
-supabase/
-└── schema.sql                   # Complete database schema
-
-scripts/
-└── seed.ts                      # Database seed script
-
-legacy/                          # Original static HTML version
-```
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -169,26 +118,6 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 🗄 Database (Supabase)
-
-The project uses **Supabase**, a PostgreSQL-based backend-as-a-service. The full schema lives in [`supabase/schema.sql`](supabase/schema.sql).
-
-### Tables
-
-| Table              | Purpose                                        |
-| ------------------ | ---------------------------------------------- |
-| `profiles`         | Extends `auth.users` with user details & roles |
-| `categories`       | Product categories (with parent support)       |
-| `products`         | Product catalog with specs, pricing & stock    |
-| `product_images`   | Product image gallery                          |
-| `addresses`        | Saved shipping addresses                       |
-| `cart_items`       | Server-side cart (user or session based)       |
-| `orders`           | Order headers with status & payment info       |
-| `order_items`      | Line items for each order                      |
-| `reviews`          | Product reviews & ratings                      |
-| `wishlist_items`   | Saved products per user                        |
-| `contact_messages` | Contact form submissions                       |
-
 ### Security (RLS)
 
 Row Level Security is enabled on all tables. Policies ensure:
@@ -216,76 +145,6 @@ After running `supabase/schema.sql` in your Supabase SQL editor, seed the data:
 
 ```bash
 npm run db:seed
-```
-
-This script upserts **5 categories** and **12 products** with images. It requires `NEXT_PUBLIC_SUPABASE_URL` and either `SUPABASE_SERVICE_ROLE_KEY` or `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-
----
-
-## 🔌 API Endpoints
-
-| Method   | Endpoint             | Description                                                        |
-| -------- | -------------------- | ------------------------------------------------------------------ |
-| `GET`    | `/api/products`      | List products (filters: `category`, `search`, `featured`, `limit`) |
-| `GET`    | `/api/orders`        | List current user's orders                                         |
-| `POST`   | `/api/orders`        | Create a new order                                                 |
-| `GET`    | `/api/addresses`     | List current user's addresses                                      |
-| `POST`   | `/api/addresses`     | Add a new address                                                  |
-| `DELETE` | `/api/addresses?id=` | Delete an address                                                  |
-| `POST`   | `/api/contact`       | Submit a contact message                                           |
-| `POST`   | `/api/auth/forgot-password` | Send a Supabase password recovery email without revealing account existence |
-
----
-
-## 🧠 Mock Data Fallback
-
-When Supabase environment variables are **not configured**, the app gracefully falls back to the static data in `src/lib/data/mock-data.ts`. This lets you develop and demo the storefront without a backend.
-
-The fallback is triggered automatically in:
-
-- `src/lib/supabase/client.ts` (returns `null`)
-- `src/lib/supabase/server.ts` (returns `null`)
-- `src/lib/data/products.ts` (uses mock data when client is `null`)
-
----
-
-## ☁️ Deployment
-
-### Vercel
-
-1. Push the repo to GitHub.
-2. Import the project in [Vercel](https://vercel.com).
-3. Add your environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `GEMINI_API_KEY`).
-4. Deploy.
-
-### Other platforms
-
-Build with `npm run build` and start with `npm run start`. Ensure your Supabase + Gemini env vars are set in the hosting environment.
-
----
-
-## 🛟 Backup & Restore
-
-See **[backup.md](backup.md)** for a complete guide on backing up your source code and Supabase database.
-
----
-
-## 📝 Notes for Future Updates
-
-- Keep this README in sync with major feature changes.
-- Add migration notes when the Supabase schema or fallback behavior changes.
-- Track new pages, API routes, and state stores in the structure section above.
-
----
-
-## ✅ Current TODOs
-
-- Improve order API error handling and response validation.
-- Add auth gating that redirects unauthenticated users on account pages.
-- Add tests and expanded linting guidance.
-- Add a product review submission UI.
-- Integrate a real payment gateway (GCash, Maya) for production.
-
 ---
 
 ## 📄 License
