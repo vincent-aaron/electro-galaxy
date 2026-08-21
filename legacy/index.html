@@ -1,0 +1,309 @@
+<!-- HOMEEE! -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electro Galaxy</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jaturat:wght@400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="featured.css">
+    <style>
+      .index-featured-section {
+    position: relative;
+    min-height: 100vh;
+    padding: 80px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden; 
+}  
+.index-featured-section h1 {
+            color: #f3ec89;
+            font-weight: 600;
+            font-size: 40px;
+            text-shadow: 0px 0px 25px rgba(255, 255, 0, 0.9);
+        }
+
+.index-background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; 
+    transform: translate(-50%, -50%);
+}
+    </style>
+    
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="img/ecom_logo-.png" alt="Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Category
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Kitchen Appliances</a>
+              <a class="dropdown-item" href="#">Office Appliances</a>
+              <a class="dropdown-item" href="#">Smart Appliances</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="Featured.html">Featured Items</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="services.html">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="About.html">About Us</a>
+          </li>
+        </ul>
+        
+        <form class="search-form">
+          <i class="fas fa-search search-icon"></i>
+          <input class="form-control search-bar ml-2" type="search" placeholder="Search" aria-label="Search">
+        </form>
+
+        <ul class="navbar-nav navbar-icons">
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-shopping-bag"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-user" id="userIcon"></i></a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+                <img src="img/wired-outline-146-trolley-hover-jump.png" alt="Shopping Bag" class="icon"
+                    onmouseover="this.src='img/trolley.gif?' + new Date().getTime()" 
+                    onmouseout="this.src='img/wired-outline-146-trolley-hover-jump.png'">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <img src="img/wired-outline-21-avatar-hover-jumping.png" alt="User Icon" class="icon"
+                    onmouseover="this.src='img/avatar.gif?' + new Date().getTime()" 
+                    onmouseout="this.src='img/wired-outline-21-avatar-hover-jumping.png'">
+            </a>
+        </li>
+        
+        </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Banner Section -->
+  <section class="banner">
+    <video autoplay muted loop>
+      <source src="img/banner-vid.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>ELECTRO</h1>
+      <h2>GALAXY</h2>
+      <p>Welcome to Electro Galaxy – Explore the Future <br> Smart Living Today!</p>
+      <a href="#" class="btn btn-learn">Learn more</a>
+    </div>
+  </section>
+  
+  <!-- Call to Action Section -->
+  <section class="call-to-action text-center py-5" data-aos="fade" data-aos-delay="100">
+    <div class="container">
+      <h2>Ready to Elevate Your Home?</h2>
+      <p>Join us in the journey of Smart Living Today!</p>
+      <a href="#" class="btn btn-cta">Shop Now</a>
+    </div>
+  </section>
+
+
+    <!-- Featured -->
+    <section class="index-featured-section">
+      <video autoplay muted loop class="index-background-video">
+        <source src="img/featured-videos/4307461-hd_1920_1080_30fps.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+      <h1  data-aos="fade-up">Featured Items</h1>
+      <div class="fcontainer mt-5">
+          <div class="row">
+              <div class="col-md-4 mb-4" data-aos="fade-up">
+                  <div class="fcard">
+                      <div class="fimage-container">
+                          <img src="img/items-kitchenhome/home-card.png" alt="Kitchen Appliances">
+                      </div>
+                      <div class="fcard-body">
+                          <h5 class="fcard-title">Kitchen Appliances</h5>
+                          <p class="fcard-text">High-class, high-quality kitchen appliances at affordable prices.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                  <div class="fcard">
+                      <div class="fimage-container">
+                          <img src="img/items-office/office-card.png" alt="Office Appliances">
+                      </div>
+                      <div class="fcard-body">
+                          <h5 class="fcard-title">Office Appliances</h5>
+                          <p class="fcard-text">Everything for your office setup, from desktops to laptops.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="400">
+                  <div class="fcard">
+                      <div class="fimage-container">
+                          <img src="img/items-smart/smart-card.png" alt="Smart Appliances">
+                      </div>
+                      <div class="fcard-body">
+                          <h5 class="fcard-title">Smart Appliances</h5>
+                          <p class="fcard-text">The latest smart appliances to meet all your tech needs.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <a href="#" class="shop-btn">Shop Now</a>
+  </section>
+  
+  
+
+  <!-- Testimonials Section -->
+<section class="testimonials py-5">
+  <div class="container">
+    <h2 class="text-center text-white mb-4" data-aos="fade-up">What Our Customers Say</h2>
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="slide-right">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text">"Electro Galaxy provided me with the best appliances I've ever used! Highly recommend!"</p>
+            <h5 class="card-title">Hoo Lee Sheht</h5>
+            <!-- Star Rating -->
+            <div class="star-rating">
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star-half-alt text-warning"></i> <!-- Half star -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="50">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text">"Fantastic customer service and great quality products. Will shop again!"</p>
+            <h5 class="card-title">Taylor Shift</h5>
+            <!-- Star Rating -->
+            <div class="star-rating">
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="slide-left">
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text">"I love my new kitchen appliances from Electro Galaxy. They're a game changer!"</p>
+            <h5 class="card-title">Ed Shernan</h5>
+            <!-- Star Rating -->
+            <div class="star-rating">
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="far fa-star text-warning"></i> <!-- Empty star -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-quote">
+  <div class="container">
+    <div class="bg-quote-text">
+      <h4>At Electro Galaxy, we don't just sell appliances - we bring innovation home, transforming everyday life into smarter, more connected experience.</h4>
+
+       </div>
+      </div>
+</section>
+
+  <div class="footer-bg-up">
+    <div class="footer-bg-container">
+     <video autoplay muted loop>
+       <source src="img/banner-vid.mp4" type="video/mp4">
+     </video>
+     <div class="overlay"></div>
+    </div>
+ </div>
+
+
+
+ 
+ <footer class="footer">
+  <div class="footer-container">
+    <div class="footer-logo">
+      <img src="img/logo-footer.png" alt="Electro Galaxy Logo">
+    </div>
+    <div class="footer-info">
+      <h3>Electro Galaxy</h3>
+      <p>The Galaxy of Electronics and Appliances</p>
+      <h4>Policies:</h4>
+      <ul>
+        <li><a href="#">Return & Refund Policy</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-contact">
+      <h4>Get in Touch:</h4>
+      <ul>
+        <li><span>📞</span> Phone: +63-123-456-7890</li>
+        <li><span>📧</span> Email: <a href="mailto:support@electrogalaxy.com">support@electrogalaxy.com</a></li>
+        <li><span>📍</span> Address: Electro Galaxy, 123 Tech Avenue, Manila, Philippines</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2024 Electro Galaxy. All rights reserved.</p>
+  </div>
+</footer>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+      AOS.init();
+  </script>
+  
+</body>
+</html>

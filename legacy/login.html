@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jaturat:wght@400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="signin-signup">
+            <form action="index.html" class="signin-form">
+                <h2 class="title">Sign In</h2>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Username" required>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <a href="index.html">
+                    <input type="submit" value="Login" class="btn">
+                </a>
+             
+                <p class="social-text">Sign in using:</p>
+                <div class="social-media">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </form>
+
+            
+
+            <form action="" class="signup-form">
+                <h2 class="title">Sign up</h2>
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Username" required>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-envelope"></i>
+                    <input type="text" placeholder="Email" required>
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <input type="submit" value="Signup" class="btn">
+                <p class="social-text">Sign up using:</p>
+                <div class="social-media">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="panel-container">
+            <div class="panel left-panel">
+                <div class="content">
+                    <h3>Welcome to Electro Galaxy!</h3>
+                    <p>Thank you for joining us! Discover the best in smart appliances and enjoy a seamless shopping experience.</p>
+                    <button class="btn" id="sign-in-btn">Sign In</button>
+                </div>
+                <img src="img/login-left.png" alt="" class="image">
+            </div>
+
+            <div class="panel right-panel">
+                <div class="content">
+                    <h3>Welcome to Electro Galaxy!</h3>
+                    <p>Don’t have an account? Sign up now to start shopping!</p>
+                    <button class="btn" id="sign-up-btn">Sign Up</button>
+                </div>
+                <img src="img/login-right.png" alt="" class="image">
+            </div>
+        </div>
+    </div>
+    <script>
+       const sign_in_btn = document.querySelector("#sign-in-btn");
+       const sign_up_btn = document.querySelector("#sign-up-btn");
+       const  container = document.querySelector(".container");
+
+       sign_up_btn.addEventListener("click", (event) => {
+    event.preventDefault(); 
+    container.classList.add("sign-up-mode");
+});
+sign_in_btn.addEventListener("click", (event) => {
+    event.preventDefault(); 
+    container.classList.remove("sign-up-mode");
+});
+
+const signinForm = document.querySelector('.signin-form');
+signinForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent the default form submission
+    window.location.href = 'index.html'; // Redirect to index.html
+});
+
+
+    </script>
+</body>
+</html>

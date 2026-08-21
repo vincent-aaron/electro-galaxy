@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Section - Dark Mode</title>
+    <style>
+        body, h2, p {
+            margin: 0;
+            padding: 0;
+            background-color: #000000; /* Dark background */
+            color: #f5f5f5; /* Light text color */
+        }
+
+        /* Products Grid Section */
+        .products-grid {
+            padding: 40px 0;
+            background-color: #000000; /* Slightly lighter dark for product section */
+        }
+
+        .products-grid h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffffff; /* Bright white for heading */
+            text-align: center;
+            margin-bottom: 40px;
+            background-color: transparent;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Four items per row */
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #2b2b2b; /* Dark card background */
+            border: 1px solid #2e2e2e; /* Thin border */
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .card img {
+        width: 90%;
+        height: 200px; 
+        object-fit: cover;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        margin: 5px auto 0; /* Changed to 'auto' for left and right */
+         }
+
+        .card-body {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff; 
+            margin: 10px 0;
+            background-color: transparent;
+        }
+
+        .card-text {
+            color: #b3b3b3; /* Softer text color for descriptions */
+            margin-bottom: 10px;
+            background-color: transparent;
+        }
+
+        .card-text strong {
+            color: #adadad; /* Gold color for price */
+        }
+
+        .btn-dark {
+            background-color: #f8e74e; /* Vibrant coral button */
+            border: none;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-dark:hover {
+            background-color: #f8e42c; /* Slightly darker coral on hover */
+            color: #000000;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr); /* Two items per row on smaller screens */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .grid {
+                grid-template-columns: 1fr; /* One item per row on very small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    
+  <!-- Products Grid Section -->
+  <section class="products-grid">
+    <div class="container">
+      <h2>Our Products</h2>
+      <div class="grid">
+       
+        <div class="card">
+          <img src="img/product/ASUS VivoBook S15 S532.jpg" class="card-img-top" alt="Laptop">
+          <div class="card-body">
+            <h5 class="card-title">High-Performance Laptop</h5>
+            <p class="card-text">Category: Electronics</p>
+            <p class="card-text"><strong>Price: ₱50,000</strong></p> 
+            <button class="btn btn-dark">Add to Cart</button>
+          </div>
+        </div>
+  
+        <div class="card">
+          <img src="img/product/collection2.png" class="card-img-top" alt="Smartphone">
+          <div class="card-body">
+            <h5 class="card-title">Smartphone</h5>
+            <p class="card-text">Category: Electronics</p>
+            <p class="card-text"><strong>Price: ₱30,000</strong></p> 
+            <button class="btn btn-dark">Add to Cart</button>
+          </div>
+        </div>
+  
+        <div class="card">
+          <img src="img/product/office-card.png" class="card-img-top" alt="Headphones">
+          <div class="card-body">
+            <h5 class="card-title">Wireless Headphones</h5>
+            <p class="card-text">Category: Accessories</p>
+            <p class="card-text"><strong>Price: ₱5,000</strong></p> 
+            <button class="btn btn-dark">Add to Cart</button>
+          </div>
+        </div>
+  
+        <div class="card">
+          <img src="img/product/television-display.png" class="card-img-top" alt="Camera">
+          <div class="card-body">
+            <h5 class="card-title">Digital Camera</h5>
+            <p class="card-text">Category: Photography</p>
+            <p class="card-text"><strong>Price: ₱20,000</strong></p> 
+            <button class="btn btn-dark">Add to Cart</button>
+          </div>
+        </div>
+        <div class="card">
+            <img src="img/product/television-display.png" class="card-img-top" alt="Camera">
+            <div class="card-body">
+              <h5 class="card-title">Digital Camera</h5>
+              <p class="card-text">Category: Photography</p>
+              <p class="card-text"><strong>Price: ₱20,000</strong></p> 
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="img/product/television-display.png" class="card-img-top" alt="Camera">
+            <div class="card-body">
+              <h5 class="card-title">Digital Camera</h5>
+              <p class="card-text">Category: Photography</p>
+              <p class="card-text"><strong>Price: ₱20,000</strong></p> 
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="img/product/television-display.png" class="card-img-top" alt="Camera">
+            <div class="card-body">
+              <h5 class="card-title">Digital Camera</h5>
+              <p class="card-text">Category: Photography</p>
+              <p class="card-text"><strong>Price: ₱20,000</strong></p> 
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="img/product/television-display.png" class="card-img-top" alt="Camera">
+            <div class="card-body">
+              <h5 class="card-title">Digital Camera</h5>
+              <p class="card-text">Category: Photography</p>
+              <p class="card-text"><strong>Price: ₱20,000</strong></p> 
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="img/product/television-display.png" class="card-img-top" alt="Camera">
+            <div class="card-body">
+              <h5 class="card-title">Digital Camera</h5>
+              <p class="card-text">Category: Photography</p>
+              <p class="card-text"><strong>Price: ₱20,000</strong></p> 
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="img/product/television-display.png" class="card-img-top" alt="Camera">
+            <div class="card-body">
+              <h5 class="card-title">Digital Camera</h5>
+              <p class="card-text">Category: Photography</p>
+              <p class="card-text"><strong>Price: ₱20,000</strong></p> 
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+
+
+        <!-- Additional products here -->
+
+      </div>
+    </div>
+  </section>
+  
+</body>
+</html>
