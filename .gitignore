@@ -35,3 +35,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# dev-only markdown docs (not required to run the app)
+agent.md
+TODO.md
+
+# dev/log artifacts
+dev-server.log
+.blackboxrules

@@ -1,7 +1,7 @@
 import type { Category, Product, ProductImage } from "@/types/database";
 
 const categories: Category[] = [
-  { id: "cat-1", name: "Kitchen Appliances", slug: "kitchen-appliances", description: "Refrigerators, ovens, microwaves and more", image_url: "https://images.unsplash.com/photo-1556911223-e4b914bebe30?w=600", parent_id: null, sort_order: 1, is_active: true, created_at: new Date().toISOString() },
+  { id: "cat-1", name: "Kitchen Appliances", slug: "kitchen-appliances", description: "Refrigerators, ovens, microwaves and more", image_url: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600", parent_id: null, sort_order: 1, is_active: true, created_at: new Date().toISOString() },
   { id: "cat-2", name: "Office Appliances", slug: "office-appliances", description: "Printers, monitors, and office equipment", image_url: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600", parent_id: null, sort_order: 2, is_active: true, created_at: new Date().toISOString() },
   { id: "cat-3", name: "Smart Appliances", slug: "smart-appliances", description: "Smart home devices and IoT gadgets", image_url: "https://images.unsplash.com/photo-1558002038-1055907df827?w=600", parent_id: null, sort_order: 3, is_active: true, created_at: new Date().toISOString() },
   { id: "cat-4", name: "Entertainment", slug: "entertainment", description: "TVs, speakers, and gaming consoles", image_url: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600", parent_id: null, sort_order: 4, is_active: true, created_at: new Date().toISOString() },
@@ -25,17 +25,17 @@ const productData: Omit<Product, "category" | "images">[] = [
 
 const imageMap: Record<string, string> = {
   "prod-1": "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600",
-  "prod-2": "https://images.unsplash.com/photo-1585659722983-1b030096d9c1?w=600",
-  "prod-3": "https://images.unsplash.com/photo-1612815154858-60aa3386f798?w=600",
+  "prod-2": "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600",
+  "prod-3": "https://images.unsplash.com/photo-1650094980833-7373de26feb6?w=600",
   "prod-4": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600",
   "prod-5": "https://images.unsplash.com/photo-1558002038-1055907df827?w=600",
-  "prod-6": "https://images.unsplash.com/photo-1558317374-0f875c829c8a?w=600",
+  "prod-6": "https://images.unsplash.com/photo-1603618090561-412154b4bd1b?w=600",
   "prod-7": "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600",
   "prod-8": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600",
   "prod-9": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=600",
   "prod-10": "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=600",
-  "prod-11": "https://images.unsplash.com/photo-1585515326630-5931f3f0a2a5?w=600",
-  "prod-12": "https://images.unsplash.com/photo-1543512214-318801244a66?w=600",
+  "prod-11": "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=600",
+  "prod-12": "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=600",
 };
 
 function enrichProduct(p: Omit<Product, "category" | "images">): Product {

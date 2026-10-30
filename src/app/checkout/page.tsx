@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, CreditCard, Truck } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { formatPrice, generateOrderNumber } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cart-store";
 
 const PAYMENT_METHODS = [
@@ -16,12 +15,12 @@ const PAYMENT_METHODS = [
 ];
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const { items, getSubtotal, clearCart } = useCartStore();
   const [step, setStep] = useState<"form" | "success">("form");
   const [loading, setLoading] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -50,36 +49,34 @@ export default function CheckoutPage() {
     e.preventDefault();
     setLoading(true);
 
+    // Prices and totals are calculated on the server from the database.
+    const { notes, ...shippingAddress } = form;
     const order = {
-      order_number: generateOrderNumber(),
-      items: items.map((i) => ({
-        product_id: i.product.id,
-        product_name: i.product.name,
-        product_image: i.product.images?.[0]?.url,
-        quantity: i.quantity,
-        unit_price: i.product.price,
-        total_price: i.product.price * i.quantity,
-      })),
-      subtotal,
-      shipping_fee: shipping,
-      total,
+      items: items.map((i) => ({ product_id: i.product.id, quantity: i.quantity })),
       payment_method: paymentMethod,
-      shipping_address: form,
+      shipping_address: shippingAddress,
+      notes,
     };
 
     try {
-      await fetch("/api/orders", {
+      const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(order),
       });
-      setOrderNumber(order.order_number);
+
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.order_number) {
+        setError(data?.error || "We couldn't place your order. Please check your connection and try again.");
+        setLoading(false);
+        return;
+      }
+
+      setOrderNumber(data.order_number);
       clearCart();
       setStep("success");
     } catch {
-      setOrderNumber(order.order_number);
-      clearCart();
-      setStep("success");
+      setError("We couldn't reach the store. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -106,6 +103,12 @@ export default function CheckoutPage() {
     <div className="container-main py-8">
       <Breadcrumbs items={[{ label: "Cart", href: "/cart" }, { label: "Checkout" }]} />
       <h1 className="section-title mb-8">Checkout</h1>
+
+      {error && (
+        <div role="alert" className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="grid gap-8 lg:grid-cols-3">

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, ShoppingCart, Heart, Truck, Shield, Minus, Plus, Check } from "lucide-react";
 import { ProductCard } from "@/components/products/ProductCard";
+import { ProductReviews } from "@/components/products/ProductReviews";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Toast, useToast } from "@/components/ui/Toast";
 import { formatPrice, calculateDiscount, cn } from "@/lib/utils";
@@ -203,6 +204,13 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
             </div>
           </div>
         </div>
+
+        {/* Customer Reviews */}
+        <ProductReviews
+          slug={product.slug}
+          fallbackRating={product.rating}
+          fallbackCount={product.review_count}
+        />
 
         {/* Related */}
         {relatedProducts.length > 0 && (

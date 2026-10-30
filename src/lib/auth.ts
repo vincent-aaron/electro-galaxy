@@ -1,3 +1,5 @@
+import { createClient } from "@/lib/supabase/client";
+
 const STORAGE_KEY = "electro-galaxy-user";
 
 export interface StoredUser {
@@ -33,5 +35,20 @@ export function clearUser(): void {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
     /* ignore */
+  }
+}
+
+/**
+ * Signs the user out everywhere: ends the Supabase session (clears its auth
+ * cookies, so API routes stop treating the browser as signed in) and removes
+ * the locally cached profile used by the UI.
+ */
+export async function signOut(): Promise<void> {
+  try {
+    await createClient()?.auth.signOut();
+  } catch (err) {
+    console.error("Supabase sign-out failed:", err);
+  } finally {
+    clearUser();
   }
 }

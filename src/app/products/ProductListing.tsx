@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
@@ -58,7 +59,7 @@ export function ProductListing({ categories }: ProductListingProps) {
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">Categories</h3>
           <ul className="space-y-1">
             <li>
-              <a
+              <Link
                 href="/products"
                 className={cn(
                   "block rounded-lg px-3 py-2 text-sm transition-colors",
@@ -66,11 +67,11 @@ export function ProductListing({ categories }: ProductListingProps) {
                 )}
               >
                 All Products
-              </a>
+              </Link>
             </li>
             {categories.map((cat) => (
               <li key={cat.id}>
-                <a
+                <Link
                   href={`/products?category=${cat.slug}`}
                   className={cn(
                     "block rounded-lg px-3 py-2 text-sm transition-colors",
@@ -78,7 +79,7 @@ export function ProductListing({ categories }: ProductListingProps) {
                   )}
                 >
                   {cat.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -127,17 +128,17 @@ export function ProductListing({ categories }: ProductListingProps) {
           <div className="mb-6 card-surface p-4 lg:hidden">
             <h3 className="mb-3 text-sm font-semibold text-white">Categories</h3>
             <div className="flex flex-wrap gap-2">
-              <a href="/products" className={cn("rounded-full px-3 py-1 text-xs", !categorySlug ? "bg-galaxy-gold text-galaxy-black" : "bg-galaxy-dark text-gray-400")}>
+              <Link href="/products" className={cn("rounded-full px-3 py-1 text-xs", !categorySlug ? "bg-galaxy-gold text-galaxy-black" : "bg-galaxy-dark text-gray-400")}>
                 All
-              </a>
+              </Link>
               {categories.map((cat) => (
-                <a
+                <Link
                   key={cat.id}
                   href={`/products?category=${cat.slug}`}
                   className={cn("rounded-full px-3 py-1 text-xs", categorySlug === cat.slug ? "bg-galaxy-gold text-galaxy-black" : "bg-galaxy-dark text-gray-400")}
                 >
                   {cat.name}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -154,7 +155,7 @@ export function ProductListing({ categories }: ProductListingProps) {
           <div className="card-surface py-16 text-center">
             <p className="text-lg font-semibold text-white">No products found</p>
             <p className="mt-2 text-sm text-gray-400">Try adjusting your filters or search terms</p>
-            <a href="/products" className="btn-primary mt-6 inline-flex">Browse All Products</a>
+            <Link href="/products" className="btn-primary mt-6 inline-flex">Browse All Products</Link>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

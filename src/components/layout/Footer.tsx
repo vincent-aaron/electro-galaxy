@@ -23,13 +23,13 @@ export function Footer() {
               Your trusted destination for premium electronics and smart appliances in the Philippines.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Facebook">
+              <a href="https://facebook.com/electrogalaxy.ph" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Facebook">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Instagram">
+              <a href="https://instagram.com/electrogalaxy.ph" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Instagram">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Twitter">
+              <a href="https://twitter.com/electrogalaxyp" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Twitter">
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
@@ -85,7 +85,7 @@ export function Footer() {
           </p>
           <div className="flex gap-4 text-sm text-gray-500">
             <Link href="/policies/privacy" className="hover:text-galaxy-gold">Privacy</Link>
-            <Link href="/policies/returns" className="hover:text-galaxy-gold">Terms</Link>
+            <Link href="/policies/terms" className="hover:text-galaxy-gold">Terms</Link>
             <Link href="/policies/returns" className="hover:text-galaxy-gold">Returns</Link>
           </div>
         </div>

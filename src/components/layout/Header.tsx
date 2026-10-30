@@ -12,11 +12,12 @@ import {
   ChevronDown,
   Heart,
   Package,
+  Shield,
 } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/Logo";
-import { getUser, clearUser } from "@/lib/auth";
+import { getUser, signOut } from "@/lib/auth";
 import type { Category } from "@/types/database";
 
 interface HeaderProps {
@@ -38,8 +39,8 @@ export function Header({ categories }: HeaderProps) {
     setUser(getUser());
   }, [pathname]);
 
-  const handleSignOut = () => {
-    clearUser();
+  const handleSignOut = async () => {
+    await signOut();
     setUser(null);
     router.push("/");
     router.refresh();
@@ -101,6 +102,10 @@ export function Header({ categories }: HeaderProps) {
           <div className="ml-auto flex items-center gap-1 sm:gap-3">
             <Link href="/account/wishlist" className="btn-ghost hidden sm:inline-flex">
               <Heart className="h-5 w-5" />
+            </Link>
+            <Link href="/admin" className="btn-ghost hidden sm:inline-flex text-xs text-gray-400 hover:text-galaxy-gold">
+              <Shield className="h-4 w-4" />
+              <span className="ml-1 hidden lg:inline">Admin</span>
             </Link>
 {user ? (
               <>

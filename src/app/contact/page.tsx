@@ -21,12 +21,15 @@ export default function ContactPage() {
         body: JSON.stringify(form),
       });
 
-      if (!res.ok) throw new Error("Failed to send message");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Something went wrong. Please try again.");
+      }
 
       setForm({ name: "", email: "", subject: "", message: "" });
       showToast("Message sent! We'll get back to you soon.");
-    } catch {
-      showToast("Message sent! We'll get back to you soon.");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

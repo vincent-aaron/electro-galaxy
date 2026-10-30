@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  User,
   Package,
   Heart,
   MapPin,
@@ -21,7 +20,7 @@ import {
 } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { useWishlistStore } from "@/store/wishlist-store";
-import { getUser, clearUser } from "@/lib/auth";
+import { getUser, signOut } from "@/lib/auth";
 import dashboardImage from "../../../img/featured-bg.png";
 import avatarImage from "../../../img/avatar.gif";
 
@@ -39,22 +38,17 @@ interface StoredUser {
 export default function AccountPage() {
   const wishlistCount = useWishlistStore((s) => s.items.length);
   const [user, setUser] = useState<StoredUser | null>(null);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     setUser(getUser());
   }, []);
 
-  const handleSignOut = () => {
-    clearUser();
+  const handleSignOut = async () => {
+    await signOut();
     setUser(null);
   };
 
-  const handleSignOutNav = () => {
-    clearUser();
-    setUser(null);
-  };
+  const handleSignOutNav = handleSignOut;
 
   const displayName = user?.full_name || (user?.email ? user.email.split("@")[0] : "Guest");
   const initials = displayName

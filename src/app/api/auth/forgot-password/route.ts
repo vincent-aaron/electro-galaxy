@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 const successMessage = "If an account exists for that email, a recovery link has been sent.";
 
 export async function POST(request: NextRequest) {
+  if (!rateLimit(`forgot:${clientIp(request)}`, 5, 15 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many requests. Please try again in a few minutes." }, { status: 429 });
+  }
+
   let email = "";
 
   try {

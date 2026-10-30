@@ -5,24 +5,28 @@
  * Seeds the Supabase database with categories, products, and product images.
  *
  * Usage:
- *   npm run db:seed
+ *   npm run db:seed        (loads variables from .env automatically)
  *
  * Requires the following environment variables:
  *   - NEXT_PUBLIC_SUPABASE_URL
- *   - SUPABASE_SERVICE_ROLE_KEY  (service role key for full access; falls back to anon key)
+ *   - SUPABASE_SERVICE_ROLE_KEY  (the anon key can't write the catalog under RLS)
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!url || !key) {
   console.error(
-    "Missing Supabase credentials. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY) in your environment."
+    "Missing Supabase credentials. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your .env file."
   );
   process.exit(1);
+}
+
+let failures = 0;
+function fail(what: string, message: string) {
+  failures += 1;
+  console.error(`  Failed to ${what}:`, message);
 }
 
 const supabase: SupabaseClient = createClient(url, key, {
@@ -60,7 +64,7 @@ const categories: SeedCategory[] = [
     name: "Kitchen Appliances",
     slug: "kitchen-appliances",
     description: "Refrigerators, ovens, microwaves and more",
-    image_url: "https://images.unsplash.com/photo-1556911223-e4b914bebe30?w=600",
+    image_url: "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600",
     sort_order: 1,
   },
   {
@@ -128,7 +132,7 @@ const products: SeedProduct[] = [
     review_count: 89,
     is_featured: true,
     specs: { capacity: "32L", power: "1000W", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1585659722983-1b030096d9c1?w=600",
+    image_url: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600",
   },
   {
     category_slug: "office-appliances",
@@ -146,7 +150,7 @@ const products: SeedProduct[] = [
     review_count: 56,
     is_featured: true,
     specs: { speed: "38 ppm", connectivity: "Ethernet, USB", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1612815154858-60aa3386f798?w=600",
+    image_url: "https://images.unsplash.com/photo-1650094980833-7373de26feb6?w=600",
   },
   {
     category_slug: "office-appliances",
@@ -200,7 +204,7 @@ const products: SeedProduct[] = [
     review_count: 94,
     is_featured: true,
     specs: { battery: "5200mAh", suction: "4000Pa", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1558317374-0f875c829c8a?w=600",
+    image_url: "https://images.unsplash.com/photo-1603618090561-412154b4bd1b?w=600",
   },
   {
     category_slug: "entertainment",
@@ -290,7 +294,7 @@ const products: SeedProduct[] = [
     review_count: 892,
     is_featured: true,
     specs: { capacity: "6Qt", functions: "7", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1585515326630-5931f3f0a2a5?w=600",
+    image_url: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=600",
   },
   {
     category_slug: "smart-appliances",
@@ -308,7 +312,7 @@ const products: SeedProduct[] = [
     review_count: 1205,
     is_featured: false,
     specs: { speaker: '1.73"', sensor: "Temperature", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1543512214-318801244a66?w=600",
+    image_url: "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=600",
   },
 ];
 
@@ -317,14 +321,22 @@ async function seedCategories(): Promise<Record<string, string>> {
   const slugToId: Record<string, string> = {};
 
   for (const cat of categories) {
-    const { data: existing } = await supabase
+    const { data: existing, error: findError } = await supabase
       .from("categories")
       .select("id")
       .eq("slug", cat.slug)
       .maybeSingle();
+    if (findError) {
+      fail(`look up category ${cat.slug}`, findError.message);
+      continue;
+    }
 
     if (existing) {
-      await supabase.from("categories").update(cat).eq("id", existing.id);
+      const { error } = await supabase.from("categories").update(cat).eq("id", existing.id);
+      if (error) {
+        fail(`update category ${cat.slug}`, error.message);
+        continue;
+      }
       slugToId[cat.slug] = existing.id;
       console.log(`  Updated category: ${cat.slug}`);
     } else {
@@ -334,7 +346,7 @@ async function seedCategories(): Promise<Record<string, string>> {
         .select("id")
         .single();
       if (error) {
-        console.error(`  Failed to insert category ${cat.slug}:`, error.message);
+        fail(`insert category ${cat.slug}`, error.message);
         continue;
       }
       slugToId[cat.slug] = data.id;
@@ -351,26 +363,34 @@ async function seedProducts(slugToId: Record<string, string>) {
   for (const prod of products) {
     const categoryId = slugToId[prod.category_slug];
     if (!categoryId) {
-      console.warn(`  Skipping ${prod.slug}: category not found`);
+      fail(`seed ${prod.slug}`, `category "${prod.category_slug}" was not seeded`);
       continue;
     }
 
     const { image_url, category_slug: _cs, ...productRow } = prod;
     void _cs;
 
-    const { data: existing } = await supabase
+    const { data: existing, error: findError } = await supabase
       .from("products")
       .select("id")
       .eq("slug", prod.slug)
       .maybeSingle();
+    if (findError) {
+      fail(`look up product ${prod.slug}`, findError.message);
+      continue;
+    }
 
     let productId: string;
 
     if (existing) {
-      await supabase
+      const { error } = await supabase
         .from("products")
         .update({ ...productRow, category_id: categoryId })
         .eq("id", existing.id);
+      if (error) {
+        fail(`update product ${prod.slug}`, error.message);
+        continue;
+      }
       productId = existing.id;
       console.log(`  Updated product: ${prod.slug}`);
     } else {
@@ -380,7 +400,7 @@ async function seedProducts(slugToId: Record<string, string>) {
         .select("id")
         .single();
       if (error) {
-        console.error(`  Failed to insert product ${prod.slug}:`, error.message);
+        fail(`insert product ${prod.slug}`, error.message);
         continue;
       }
       productId = data.id;
@@ -394,20 +414,19 @@ async function seedProducts(slugToId: Record<string, string>) {
       .eq("is_primary", true)
       .maybeSingle();
 
-    if (imgExisting) {
-      await supabase
-        .from("product_images")
-        .update({ url: image_url, alt_text: prod.name })
-        .eq("id", imgExisting.id);
-    } else {
-      await supabase.from("product_images").insert({
-        product_id: productId,
-        url: image_url,
-        alt_text: prod.name,
-        sort_order: 0,
-        is_primary: true,
-      });
-    }
+    const { error: imageError } = imgExisting
+      ? await supabase
+          .from("product_images")
+          .update({ url: image_url, alt_text: prod.name })
+          .eq("id", imgExisting.id)
+      : await supabase.from("product_images").insert({
+          product_id: productId,
+          url: image_url,
+          alt_text: prod.name,
+          sort_order: 0,
+          is_primary: true,
+        });
+    if (imageError) fail(`save image for ${prod.slug}`, imageError.message);
   }
 }
 
@@ -417,6 +436,10 @@ async function main() {
   const slugToId = await seedCategories();
   await seedProducts(slugToId);
 
+  if (failures > 0) {
+    console.error(`\nSeed finished with ${failures} error(s). See the messages above.`);
+    process.exit(1);
+  }
   console.log("\nSeed completed successfully.");
 }
 

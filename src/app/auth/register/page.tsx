@@ -11,6 +11,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ fullName: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +37,7 @@ if (!supabase || !isSupabaseConfigured()) {
       return;
     }
 
-    const { error: authError } = await supabase.auth.signUp({
+    const { data, error: authError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: { data: { full_name: form.fullName } },
@@ -44,6 +45,14 @@ if (!supabase || !isSupabaseConfigured()) {
 
     if (authError) {
       setError(authError.message);
+      setLoading(false);
+      return;
+    }
+
+    // When email confirmation is enabled (the Supabase default), signUp returns
+    // without a session. Ask the user to verify their inbox before continuing.
+    if (!data.session) {
+      setNeedsConfirmation(true);
       setLoading(false);
       return;
     }
@@ -68,6 +77,16 @@ if (!supabase || !isSupabaseConfigured()) {
           {error && (
             <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
               {error}
+            </div>
+          )}
+
+          {needsConfirmation && (
+            <div role="status" className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+              Almost there! We sent a confirmation link to <span className="font-semibold">{form.email}</span>. Please verify your email, then{" "}
+              <Link href="/auth/login" className="font-semibold underline hover:text-emerald-200">
+                sign in
+              </Link>
+              .
             </div>
           )}
 

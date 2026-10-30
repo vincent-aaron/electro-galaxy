@@ -107,7 +107,8 @@ export interface Order {
   shipping_fee: number;
   discount: number;
   total: number;
-  shipping_address: Address;
+  /** Snapshot of the delivery address; `email` is set for guest checkouts. */
+  shipping_address: Omit<Address, "id" | "user_id" | "label" | "is_default"> & { email?: string };
   notes: string | null;
   tracking_number: string | null;
   created_at: string;

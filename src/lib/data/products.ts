@@ -18,6 +18,7 @@ export async function getCategories(): Promise<Category[]> {
     .eq("is_active", true)
     .order("sort_order");
 
+  if (error) console.error("Failed to load categories:", error.message);
   if (error || !data?.length) return mockCategories;
   return data;
 }
@@ -30,14 +31,7 @@ export async function getProducts(options?: {
 }): Promise<Product[]> {
   const supabase = await createClient();
 
-  if (!supabase) {
-    let products = [...mockProducts];
-    if (options?.featured) products = products.filter((p) => p.is_featured);
-    if (options?.categorySlug) products = getMockProductsByCategory(options.categorySlug);
-    if (options?.search) products = searchMockProducts(options.search);
-    if (options?.limit) products = products.slice(0, options.limit);
-    return products;
-  }
+  if (!supabase) return getMockProducts(options);
 
   let query = supabase
     .from("products")
@@ -53,21 +47,39 @@ export async function getProducts(options?: {
       .single();
     if (cat) query = query.eq("category_id", cat.id);
   }
-  if (options?.search) {
-    query = query.or(`name.ilike.%${options.search}%,brand.ilike.%${options.search}%`);
+  // Strip characters with meaning in PostgREST filter syntax before interpolating.
+  const search = options?.search?.replace(/[,()*%\\]/g, " ").trim();
+  if (search) {
+    query = query.or(`name.ilike.%${search}%,brand.ilike.%${search}%`);
   }
   if (options?.limit) query = query.limit(options.limit);
 
   const { data, error } = await query.order("created_at", { ascending: false });
-  if (error || !data?.length) {
-    let products = [...mockProducts];
-    if (options?.featured) products = products.filter((p) => p.is_featured);
-    if (options?.categorySlug) products = getMockProductsByCategory(options.categorySlug);
-    if (options?.search) products = searchMockProducts(options.search);
-    if (options?.limit) products = products.slice(0, options.limit);
-    return products;
+  if (error) {
+    // Keep the storefront up, but make the failure visible in the server logs.
+    console.error("Failed to load products, showing demo data:", error.message);
+    return getMockProducts(options);
   }
-  return data;
+  // An unseeded database shows the demo catalog; a search or category with no
+  // matches in a real catalog correctly shows nothing.
+  if (!data?.length && !options?.search && !options?.categorySlug) {
+    return getMockProducts(options);
+  }
+  return data ?? [];
+}
+
+function getMockProducts(options?: {
+  featured?: boolean;
+  categorySlug?: string;
+  search?: string;
+  limit?: number;
+}): Product[] {
+  let products = [...mockProducts];
+  if (options?.featured) products = products.filter((p) => p.is_featured);
+  if (options?.categorySlug) products = getMockProductsByCategory(options.categorySlug);
+  if (options?.search) products = searchMockProducts(options.search);
+  if (options?.limit) products = products.slice(0, options.limit);
+  return products;
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
