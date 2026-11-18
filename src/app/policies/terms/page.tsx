@@ -5,43 +5,43 @@ export const metadata = { title: "Terms of Service" };
 const sections = [
   {
     title: "1. Acceptance of Terms",
-    body: "By accessing or shopping at Electro Galaxy, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please do not use our website or services. We may update these terms from time to time, and the latest version will always be available on this page.",
+    body: "Electro Galaxy is a portfolio demo, not a real store. By using this website, you agree to these terms. If you do not agree with any part of them, please do not use the website.",
   },
   {
     title: "2. Accounts",
-    body: "You may browse the store without an account, but placing tracked orders, saving addresses, and accessing order history requires registration. You are responsible for keeping your account credentials secure and for all activity that occurs under your account. You must provide accurate and complete information when creating an account.",
+    body: "You may browse without an account. Demo accounts are provided for trying features such as order history and saved addresses, and may be removed at any time. Please do not reuse a password from another service.",
   },
   {
     title: "3. Orders & Pricing",
-    body: "All prices are listed in Philippine Pesos (PHP) and are subject to change without notice. We reserve the right to cancel or refuse any order at any time, including in the case of pricing errors, suspected fraud, or product unavailability. Placing an order constitutes an offer to purchase; acceptance occurs when we confirm your order.",
+    body: "Orders placed on this website are simulated. Prices are sample figures, no goods are sold, and placing a demo order does not create a purchase or any obligation.",
   },
   {
     title: "4. Payment",
-    body: "We accept Cash on Delivery (COD), GCash, Maya, credit/debit cards, and bank transfer. For card and e-wallet payments, charges are processed securely through our payment partners. For COD orders, payment is due in full upon delivery. Failure to pay COD orders on multiple occasions may result in account restrictions.",
+    body: "No payment is collected. The payment options at checkout are simulated, and you must not enter card numbers or other payment details anywhere on this website.",
   },
   {
     title: "5. Shipping & Delivery",
-    body: "We ship nationwide across the Philippines. Shipping is free for orders over ₱5,000; otherwise a flat fee of ₱199 applies. Estimated delivery times vary by location, typically 2–7 business days for Metro Manila and 5–14 business days for provincial areas. Risk of loss passes to you upon delivery to the carrier.",
+    body: "Nothing is shipped. Shipping fees are shown only to demonstrate how checkout works.",
   },
   {
     title: "6. Returns & Refunds",
-    body: "Our 30-day return policy, eligibility requirements, and refund process are described in full on our Returns & Refunds page. Items must be returned in their original condition with all packaging and accessories unless defective.",
+    body: "Because nothing is sold, no returns or refunds apply. The Returns & Refunds page is sample content.",
   },
   {
     title: "7. Product Information",
-    body: "We work hard to display product details, images, and specifications accurately. However, we do not guarantee that all information is error-free. Colors may vary slightly depending on your display, and manufacturers may update product designs without notice.",
+    body: "Product details are sample data and may be inaccurate. They are not an offer or endorsement, and no affiliation with any brand is implied.",
   },
   {
     title: "8. Intellectual Property",
-    body: "All content on this website — including the Electro Galaxy name and logo, product photography, graphics, and text — is the property of Electro Galaxy or its licensors and is protected by applicable intellectual property laws. You may not reproduce or reuse this content without written permission.",
+    body: "Product names and brand names belong to their respective owners and are used here for demonstration only.",
   },
   {
     title: "9. Limitation of Liability",
-    body: "To the maximum extent permitted by law, Electro Galaxy shall not be liable for any indirect, incidental, or consequential damages arising from your use of the website or purchase of products. Our total liability for any claim is limited to the amount you paid for the product in question.",
+    body: "This demo is provided as is, without warranties of any kind. To the maximum extent permitted by law, its creator is not liable for any damages arising from your use of the website.",
   },
   {
     title: "10. Contact",
-    body: "Questions about these Terms? Contact us at support@electrogalaxy.ph, call +63 2 8123 4567, or reach out via our contact page. We're located at 123 Galaxy Street, Makati City, Metro Manila, Philippines.",
+    body: "Questions about these terms? Please use the contact page.",
   },
 ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
+import { Info, Mail, Send } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Toast, useToast } from "@/components/ui/Toast";
 
@@ -27,7 +27,7 @@ export default function ContactPage() {
       }
 
       setForm({ name: "", email: "", subject: "", message: "" });
-      showToast("Message sent! We'll get back to you soon.");
+      showToast("Message sent. Thanks for trying the demo!");
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
@@ -42,7 +42,7 @@ export default function ContactPage() {
       <div className="mb-12 text-center">
         <h1 className="section-title mb-4">Contact Us</h1>
         <p className="mx-auto max-w-2xl text-gray-400">
-          Have a question about a product, order, or service? Our team is here to help. Reach out via the form below or through our contact channels.
+          Have a question or feedback about this demo project? Send a message using the form below.
         </p>
       </div>
 
@@ -50,10 +50,8 @@ export default function ContactPage() {
         {/* Contact info */}
         <div className="space-y-4">
           {[
-            { icon: MapPin, title: "Visit Us", lines: ["123 Galaxy Street, Makati City", "Metro Manila, Philippines"] },
-            { icon: Phone, title: "Call Us", lines: ["+63 2 8123 4567", "Mon–Sat, 9:00 AM – 6:00 PM"] },
-            { icon: Mail, title: "Email Us", lines: ["support@electrogalaxy.ph", "We reply within 24 hours"] },
-            { icon: Clock, title: "Support Hours", lines: ["24/7 for order issues", "Live chat Mon–Sat"] },
+            { icon: Info, title: "Demo Store", lines: ["This is a portfolio project.", "There is no physical store or customer support line."] },
+            { icon: Mail, title: "Messages", lines: ["Messages are saved to the demo database.", "Please do not include sensitive information."] },
           ].map(({ icon: Icon, title, lines }) => (
             <div key={title} className="card-surface flex gap-4 p-5">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-galaxy-gold/10">

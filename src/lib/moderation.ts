@@ -7,6 +7,7 @@
  * - Fallback: an offline denylist so profanity is still blocked when the AI
  *   key is not configured.
  */
+import "server-only";
 
 // Server-only key (never a NEXT_PUBLIC_ variant — those are bundled for browsers).
 const apiKey = () => process.env.GEMINI_API_KEY;

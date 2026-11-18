@@ -143,7 +143,7 @@ CREATE OR REPLACE FUNCTION public.place_order(
 ) RETURNS JSONB
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 DECLARE
-  v_order_id UUID := uuid_generate_v4();
+  v_order_id UUID := gen_random_uuid();
   v_order_number TEXT;
   v_subtotal DECIMAL(12, 2) := 0;
   v_shipping DECIMAL(12, 2);

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { generateOrderNumber } from "@/lib/utils";
+import { containsCardNumber } from "@/lib/card-check";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 const PAYMENT_METHODS = ["cod", "gcash", "maya", "credit_card", "bank_transfer"] as const;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -47,6 +49,13 @@ export async function GET() {
  * which also decrements stock in the same transaction.
  */
 export async function POST(request: Request) {
+  if (!rateLimit(`orders:${clientIp(request)}`, 10, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { success: false, error: "Too many demo orders. Please try again in a few minutes." },
+      { status: 429 }
+    );
+  }
+
   let body: OrderPayload;
   try {
     body = await request.json();
@@ -107,6 +116,16 @@ export async function POST(request: Request) {
     );
   }
 
+  // This is a demo store: card numbers must never reach the database.
+  const notes = text(body.notes, 1000);
+  const freeText = [shippingAddress.full_name, shippingAddress.street_address, shippingAddress.city, shippingAddress.province, notes];
+  if (freeText.some(containsCardNumber)) {
+    return NextResponse.json(
+      { success: false, error: "This is a demo store. Please remove the card number and do not enter payment details." },
+      { status: 400 }
+    );
+  }
+
   const supabase = await createClient();
 
   // Mock mode (no backend configured): acknowledge so local demos still work.
@@ -126,7 +145,7 @@ export async function POST(request: Request) {
     p_items: items,
     p_shipping_address: shippingAddress,
     p_payment_method: paymentMethod,
-    p_notes: text(body.notes, 1000) || null,
+    p_notes: notes || null,
   });
 
   if (error || !data) {

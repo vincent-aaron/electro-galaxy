@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { DemoNotice } from "@/components/layout/DemoNotice";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import AIAssistant from "@/components/ai/AIAssistant";
 import { getCategories } from "@/lib/data/products";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -13,13 +15,14 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Electro Galaxy | Premium Electronics & Smart Appliances",
+    default: "Electro Galaxy | Portfolio Demo Electronics Store",
     template: "%s | Electro Galaxy",
   },
   description:
-    "Shop premium electronics, smart appliances, and home gadgets at Electro Galaxy. Free shipping on orders over ₱5,000. Trusted by thousands across the Philippines.",
-  keywords: ["electronics", "appliances", "smart home", "Philippines", "e-commerce"],
+    "Electro Galaxy is a portfolio demo of a full-stack electronics store built with Next.js and Supabase. No real payments or orders are processed.",
+  keywords: ["portfolio", "demo store", "e-commerce", "Next.js", "Supabase"],
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",
@@ -32,6 +35,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-sans`}>
+        <DemoNotice />
         <Header categories={categories} />
         <main className="min-h-screen">{children}</main>
         <Footer />

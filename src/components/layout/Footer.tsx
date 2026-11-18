@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 
 export function Footer() {
@@ -19,20 +18,9 @@ export function Footer() {
 {/* Brand */}
           <div>
             <Logo showText={false} className="mb-4" />
-            <p className="mb-4 text-sm text-gray-400">
-              Your trusted destination for premium electronics and smart appliances in the Philippines.
+            <p className="text-sm text-gray-400">
+              A portfolio demo of a full-stack electronics store.
             </p>
-            <div className="flex gap-3">
-              <a href="https://facebook.com/electrogalaxy.ph" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Facebook">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="https://instagram.com/electrogalaxy.ph" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Instagram">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="https://twitter.com/electrogalaxyp" target="_blank" rel="noopener noreferrer" className="rounded-lg bg-galaxy-card p-2 text-gray-400 hover:text-galaxy-gold" aria-label="Twitter">
-                <Twitter className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Shop */}
@@ -59,29 +47,19 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* About this demo */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">Contact</h3>
-            <ul className="space-y-3 text-sm text-gray-400">
-              <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-galaxy-gold" />
-                <span>123 Galaxy Street, Makati City, Metro Manila, Philippines</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 shrink-0 text-galaxy-gold" />
-                <a href="tel:+63281234567" className="hover:text-galaxy-gold">+63 2 8123 4567</a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 shrink-0 text-galaxy-gold" />
-                <a href="mailto:support@electrogalaxy.ph" className="hover:text-galaxy-gold">support@electrogalaxy.ph</a>
-              </li>
-            </ul>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">About This Demo</h3>
+            <p className="text-sm text-gray-400">
+              Designed and built by Vincent Aaron Vicente. Products and prices are sample data, and brand names belong to their respective owners.
+            </p>
+            <Link href="/about" className="mt-3 inline-block text-sm text-galaxy-gold hover:underline">About the project</Link>
           </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-galaxy-border pt-8 sm:flex-row">
 <p className="text-sm text-gray-500">
-            &copy; {year} Electro Galaxy. All rights reserved.
+            &copy; {year} Electro Galaxy. Portfolio demo, not a real store.
           </p>
           <div className="flex gap-4 text-sm text-gray-500">
             <Link href="/policies/privacy" className="hover:text-galaxy-gold">Privacy</Link>

@@ -1,10 +1,7 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
-  // Set NEXT_PUBLIC_SITE_URL in production to your deployed domain,
-  // e.g. https://electro-galaxy.vercel.app
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
   return {
     rules: [
       {
@@ -13,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/account", "/api", "/checkout", "/auth", "/admin"],
       },
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: `${getSiteUrl()}/sitemap.xml`,
   };
 }

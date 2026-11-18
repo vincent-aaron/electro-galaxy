@@ -13,7 +13,7 @@ const sections = [
   },
   {
     title: "How to Start a Return",
-    body: "To initiate a return, contact our support team at support@electrogalaxy.ph or call +63 2 8123 4567 with your order number. We'll provide a return authorization and instructions. A return shipping label may be provided depending on the reason for return.",
+    body: "To initiate a return, a customer would contact the support team with their order number and receive a return authorization and instructions. A return shipping label may be provided depending on the reason for return.",
   },
   {
     title: "Refund Process",
@@ -39,7 +39,10 @@ export default function ReturnsPolicyPage() {
       <Breadcrumbs items={[{ label: "Returns & Refunds" }]} />
       <div className="mx-auto max-w-3xl">
         <h1 className="section-title mb-2">Returns &amp; Refunds</h1>
-        <p className="mb-8 text-sm text-gray-500">Last updated: {new Date().toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" })}</p>
+        <p className="mb-4 text-sm text-gray-500">Last updated: {new Date().toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" })}</p>
+        <p role="note" className="mb-8 rounded-lg border border-galaxy-gold/30 bg-galaxy-gold/10 px-4 py-3 text-sm text-gray-200">
+          <span className="font-semibold text-galaxy-gold">Sample policy.</span> This is a portfolio demo: nothing is sold, so no returns or refunds apply.
+        </p>
 
         <div className="space-y-6">
           {sections.map(({ title, body }) => (

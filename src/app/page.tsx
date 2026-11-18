@@ -52,7 +52,7 @@ export default async function HomePage() {
             <div className="home-hero-ring home-hero-ring--inner" />
             <div className="home-hero-main-card">
               <Image src={smartKitchenImage} alt="" fill priority className="object-cover" sizes="560px" />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/55 to-transparent p-7 pt-20">
+              <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black via-black/55 to-transparent p-7 pb-20 pr-28">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-galaxy-gold">Connected living</p>
                 <p className="mt-1 text-xl font-bold text-white">A smarter space starts here.</p>
               </div>
@@ -69,7 +69,7 @@ export default async function HomePage() {
         <div className="container-main grid grid-cols-2 gap-4 py-6 sm:grid-cols-4">
           {[
             { icon: Truck, label: "Free Shipping", sub: "Orders over ₱5,000" },
-            { icon: Shield, label: "Secure Payment", sub: "100% protected" },
+            { icon: Shield, label: "Demo Checkout", sub: "No real payments" },
             { icon: Headphones, label: "24/7 Support", sub: "Dedicated help" },
             { icon: Zap, label: "Fast Delivery", sub: "1-3 business days" },
           ].map(({ icon: Icon, label, sub }) => (
@@ -162,13 +162,13 @@ export default async function HomePage() {
             <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-galaxy-gold/5 blur-3xl" />
             <div className="relative max-w-xl">
               <h2 className="mb-4 text-2xl font-bold text-white sm:text-3xl">
-                Join the Galaxy Community
+                Try the Full Demo
               </h2>
               <p className="mb-6 text-gray-400">
-                Sign up today and get 10% off your first order. Plus exclusive access to member-only deals and early product launches.
+                Create a demo account to explore the wishlist, saved addresses, order history and product reviews.
               </p>
               <Link href="/auth/register" className="btn-primary px-8 py-3">
-                Create Free Account
+                Create Demo Account
               </Link>
             </div>
           </div>
@@ -179,22 +179,22 @@ export default async function HomePage() {
 {/* Testimonials */}
       <section className="border-t border-galaxy-border bg-galaxy-dark py-12 sm:py-16">
         <div className="container-main">
-          <h2 className="section-title mb-8 text-center">What Our Customers Say</h2>
+          <h2 className="section-title mb-2 text-center">Sample Reviews</h2>
+          <p className="mb-8 text-center text-sm text-gray-500">Placeholder content showing how customer feedback would appear.</p>
           <Reveal>
           <div className="grid gap-6 sm:grid-cols-3">
             {[
-              { name: "Maria Santos", text: "Amazing selection of smart appliances! Fast delivery and excellent customer service.", rating: 5 },
-              { name: "James Reyes", text: "Best prices for electronics in the Philippines. The checkout process was smooth and secure.", rating: 5 },
-              { name: "Anna Cruz", text: "Love my new smart fridge! Installation service was professional and hassle-free.", rating: 4 },
+              { text: "Amazing selection of smart appliances! Fast delivery and excellent customer service.", rating: 5 },
+              { text: "Great prices on electronics. The checkout process was smooth and easy to follow.", rating: 5 },
+              { text: "Love my new smart fridge! Installation service was professional and hassle-free.", rating: 4 },
             ].map((review) => (
-              <div key={review.name} className="card-surface p-6">
+              <div key={review.text} className="card-surface p-6">
                 <div className="mb-3 flex gap-0.5">
                   {Array.from({ length: review.rating }).map((_, i) => (
                     <span key={i} className="text-galaxy-gold">★</span>
                   ))}
                 </div>
-                <p className="mb-4 text-sm text-gray-300">&ldquo;{review.text}&rdquo;</p>
-                <p className="text-sm font-semibold text-white">{review.name}</p>
+                <p className="text-sm text-gray-300">&ldquo;{review.text}&rdquo;</p>
               </div>
 ))}
           </div>

@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle, CreditCard, Truck } from "lucide-react";
+import { CheckCircle, CreditCard, Info, Truck } from "lucide-react";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cart-store";
 
 const PAYMENT_METHODS = [
-  { id: "cod", label: "Cash on Delivery", icon: Truck },
-  { id: "gcash", label: "GCash", icon: CreditCard },
-  { id: "maya", label: "Maya", icon: CreditCard },
-  { id: "credit_card", label: "Credit / Debit Card", icon: CreditCard },
+  { id: "cod", label: "Cash on Delivery (simulated)", icon: Truck },
+  { id: "gcash", label: "GCash (simulated)", icon: CreditCard },
+  { id: "maya", label: "Maya (simulated)", icon: CreditCard },
+  { id: "credit_card", label: "Card (simulated)", icon: CreditCard },
 ];
 
 export default function CheckoutPage() {
@@ -47,6 +47,7 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
 
     // Prices and totals are calculated on the server from the database.
@@ -86,10 +87,10 @@ export default function CheckoutPage() {
     return (
       <div className="container-main py-16 text-center">
         <CheckCircle className="mx-auto mb-6 h-16 w-16 text-green-500" />
-        <h1 className="mb-2 text-3xl font-bold text-white">Order Placed!</h1>
-        <p className="mb-2 text-gray-400">Thank you for your purchase.</p>
+        <h1 className="mb-2 text-3xl font-bold text-white">Demo Order Placed!</h1>
+        <p className="mb-2 text-gray-400">Nothing was charged and nothing will be shipped.</p>
         <p className="mb-8 text-sm text-gray-500">
-          Order number: <span className="font-mono text-galaxy-gold">{orderNumber}</span>
+          Demo order number: <span className="font-mono text-galaxy-gold">{orderNumber}</span>
         </p>
         <div className="flex justify-center gap-4">
           <Link href="/account/orders" className="btn-primary px-8 py-3">View Orders</Link>
@@ -102,7 +103,14 @@ export default function CheckoutPage() {
   return (
     <div className="container-main py-8">
       <Breadcrumbs items={[{ label: "Cart", href: "/cart" }, { label: "Checkout" }]} />
-      <h1 className="section-title mb-8">Checkout</h1>
+      <h1 className="section-title mb-6">Checkout</h1>
+
+      <div role="note" className="mb-6 flex items-start gap-3 rounded-lg border border-galaxy-gold/30 bg-galaxy-gold/10 px-4 py-3 text-sm text-gray-200">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-galaxy-gold" />
+        <p>
+          <span className="font-semibold text-galaxy-gold">Demo checkout.</span> You will not be charged and nothing will ship. Please use made-up shipping details, and never enter card numbers or other payment information.
+        </p>
+      </div>
 
       {error && (
         <div role="alert" className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
@@ -111,7 +119,7 @@ export default function CheckoutPage() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
             {/* Shipping */}
             <div className="card-surface p-6">
@@ -154,7 +162,8 @@ export default function CheckoutPage() {
 
             {/* Payment */}
             <div className="card-surface p-6">
-              <h2 className="mb-4 text-lg font-bold text-white">Payment Method</h2>
+              <h2 className="mb-1 text-lg font-bold text-white">Payment Method</h2>
+              <p className="mb-4 text-sm text-gray-400">Simulated only. This store never asks for card or e-wallet details.</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {PAYMENT_METHODS.map(({ id, label, icon: Icon }) => (
                   <button
@@ -199,7 +208,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
               <button type="submit" disabled={loading} className="btn-primary mt-6 w-full py-3 disabled:opacity-50">
-                {loading ? "Processing..." : "Place Order"}
+                {loading ? "Processing..." : "Place Demo Order"}
               </button>
             </div>
           </div>

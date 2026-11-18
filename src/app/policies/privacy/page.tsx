@@ -4,32 +4,36 @@ export const metadata = { title: "Privacy Policy" };
 
 const sections = [
   {
+    title: "Portfolio Demo",
+    body: "Electro Galaxy is a portfolio demo, not a real store. Please use made-up details when trying checkout, and do not submit sensitive information anywhere on this site.",
+  },
+  {
     title: "Information We Collect",
-    body: "When you create an account, place an order, or contact us, we collect information such as your name, email address, phone number, shipping address, and payment details. We also gather usage data to improve your shopping experience.",
+    body: "When you create a demo account, place a demo order, or send a message, the details you enter (such as your name, email address, phone number, and shipping address) are saved in the demo database.",
   },
   {
     title: "How We Use Your Information",
-    body: "We use your information to process orders, provide customer support, personalize your shopping experience, send order updates, and improve our products and services. We may send promotional emails if you opt in.",
+    body: "Your information is only used to make the demo work, such as signing you in and showing your order history. It is not used for marketing.",
   },
   {
-    title: "Payment Security",
-    body: "All payment transactions are processed through secure, PCI-compliant payment gateways. We do not store full credit card numbers on our servers. Cash on Delivery, GCash, and Maya transactions follow industry-standard security practices.",
+    title: "Payment Details",
+    body: "No payments are processed. This site never asks for card numbers, CVV codes, or e-wallet logins, and order requests containing a card number are rejected.",
   },
   {
     title: "Data Sharing",
-    body: "We do not sell your personal information to third parties. We may share data with service providers (shipping carriers, payment processors) only as necessary to fulfill your orders and provide services.",
+    body: "We do not sell your personal information. The demo is hosted on Vercel and stores data with Supabase. Messages sent to the AI assistant and the text of product reviews are processed by Google Gemini.",
   },
   {
-    title: "Cookies & Tracking",
-    body: "We use cookies and similar technologies to remember your cart, keep you signed in, and analyze site traffic. You can control cookie preferences through your browser settings.",
+    title: "Cookies & Local Storage",
+    body: "Cookies keep you signed in, and your browser's local storage remembers your cart and wishlist. You can clear both through your browser settings.",
   },
   {
     title: "Your Rights",
-    body: "You may access, update, or delete your personal information at any time through your account settings. You can also contact our support team to request data deletion or opt out of marketing communications.",
+    body: "You can ask for your demo account and related data to be deleted by sending a request through the contact page.",
   },
   {
     title: "Contact Us",
-    body: "If you have questions about this privacy policy or how we handle your data, contact us at support@electrogalaxy.ph or +63 2 8123 4567.",
+    body: "If you have questions about this privacy policy or how your data is handled, please use the contact page.",
   },
 ];
 

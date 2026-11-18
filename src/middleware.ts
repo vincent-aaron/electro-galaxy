@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { supabaseConfig } from "@/lib/supabase/env";
 
 /**
  * Refreshes the Supabase auth session on every request and writes the new
@@ -8,17 +9,16 @@ import { NextResponse, type NextRequest } from "next/server";
  * is eventually revoked (users get logged out at random).
  */
 export async function middleware(request: NextRequest) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const config = supabaseConfig(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
   // Mock mode: nothing to refresh.
-  if (!url || !key || url.includes("your-project")) {
+  if (!config) {
     return NextResponse.next({ request });
   }
 
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(url, key, {
+  const supabase = createServerClient(config.url, config.key, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -33,8 +33,13 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  // Do not remove: this call is what triggers the token refresh.
-  await supabase.auth.getUser();
+  // Do not remove: this call is what triggers the token refresh. A Supabase
+  // outage must not take the whole site down, so failures are only logged.
+  try {
+    await supabase.auth.getUser();
+  } catch (err) {
+    console.error("Supabase session refresh failed:", err);
+  }
 
   return response;
 }
