@@ -1,15 +1,18 @@
+import "server-only";
+import { createHash } from "node:crypto";
+import { createServiceClient } from "@/lib/supabase/service";
+
 /**
- * Minimal in-memory fixed-window rate limiter for API routes.
+ * Fixed-window rate limiting for API routes.
  *
- * Best-effort only: counts live in this server instance's memory, so on
- * serverless hosts each instance has its own window. It still stops casual
- * scripted abuse of the Gemini-backed and form endpoints. For stronger
- * guarantees, swap this for a shared store (e.g. Upstash Redis).
+ * Counts are kept in this instance's memory and, once
+ * supabase/security-hardening.sql has been applied, in a table shared by every
+ * serverless instance. Until then (or if the database is unreachable) the
+ * in-memory count still applies.
  */
 const hits = new Map<string, { count: number; resetAt: number }>();
 
-/** Returns true if the request is allowed, false once `limit` is exceeded. */
-export function rateLimit(key: string, limit: number, windowMs: number): boolean {
+function memoryLimit(key: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
   const entry = hits.get(key);
 
@@ -25,8 +28,32 @@ export function rateLimit(key: string, limit: number, windowMs: number): boolean
   return entry.count <= limit;
 }
 
-/** Best-effort client IP from proxy headers (Vercel / most hosts set these). */
+/** Returns true if the request is allowed, false once `limit` is exceeded. */
+export async function rateLimit(key: string, limit: number, windowMs: number): Promise<boolean> {
+  if (!memoryLimit(key, limit, windowMs)) return false;
+
+  const service = createServiceClient();
+  if (!service) return true;
+
+  try {
+    // Hashed so IP addresses and user ids are not stored in the table.
+    const hashed = createHash("sha256").update(key).digest("hex");
+    const { data, error } = await service.rpc("check_rate_limit", {
+      p_key: hashed,
+      p_limit: limit,
+      p_window_seconds: Math.ceil(windowMs / 1000),
+    });
+    return error ? true : data !== false;
+  } catch {
+    return true;
+  }
+}
+
+/** Client IP as reported by the hosting platform, which overwrites these headers. */
 export function clientIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  return forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+  const forwarded =
+    request.headers.get("x-vercel-forwarded-for") ??
+    request.headers.get("x-real-ip") ??
+    request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || "unknown";
 }

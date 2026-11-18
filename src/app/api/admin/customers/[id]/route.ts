@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
+import { UUID_RE } from "@/lib/api-guard";
+import { createServiceClient } from "@/lib/supabase/service";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -13,6 +15,9 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 
   const { id } = await params;
+  if (!UUID_RE.test(id)) {
+    return NextResponse.json({ error: "Invalid customer." }, { status: 400 });
+  }
 
   let body: Record<string, unknown>;
   try {
@@ -25,7 +30,9 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Invalid role." }, { status: 400 });
   }
 
-  const { data: customer, error: updateError } = await supabase
+  // Signed-in users can't write the role column directly (security-hardening.sql),
+  // so the change is made with the service role after the admin check above.
+  const { data: customer, error: updateError } = await (createServiceClient() ?? supabase)
     .from("profiles")
     .update({ role: body.role })
     .eq("id", id)
@@ -34,7 +41,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   if (updateError || !customer) {
     return NextResponse.json(
-      { error: updateError?.message || "Failed to update customer." },
+      { error: "Failed to update customer." },
       { status: 400 }
     );
   }

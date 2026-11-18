@@ -66,7 +66,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   if (updateError || !order) {
     return NextResponse.json(
-      { error: updateError?.message || "Failed to update order." },
+      { error: "Failed to update order." },
       { status: 400 }
     );
   }

@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { readJsonBody, UUID_RE } from "@/lib/api-guard";
+import { rateLimit } from "@/lib/rate-limit";
+
+const text = (value: unknown, max: number) =>
+  typeof value === "string" ? value.trim().slice(0, max) : "";
 
 export async function GET() {
   const supabase = await createClient();
@@ -19,7 +24,8 @@ export async function GET() {
     .order("is_default", { ascending: false });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Failed to load addresses:", error.code);
+    return NextResponse.json({ error: "We couldn't load your addresses." }, { status: 500 });
   }
 
   return NextResponse.json({ addresses: data || [] });
@@ -36,10 +42,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: "Not authenticated" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const { label, full_name, phone, street_address, city, province, postal_code, country, is_default } = body;
+  if (!(await rateLimit(`addresses:${user.id}`, 20, 10 * 60 * 1000))) {
+    return NextResponse.json({ success: false, error: "Too many requests. Please try again later." }, { status: 429 });
+  }
 
-  if (!full_name || !phone || !street_address || !city || !province || !postal_code) {
+  const { data: body, response } = await readJsonBody(request, 8 * 1024);
+  if (response) return response;
+
+  const address = {
+    label: text(body.label, 50) || "Home",
+    full_name: text(body.full_name, 200),
+    phone: text(body.phone, 40),
+    street_address: text(body.street_address, 300),
+    city: text(body.city, 200),
+    province: text(body.province, 200),
+    postal_code: text(body.postal_code, 20),
+    country: text(body.country, 100) || "Philippines",
+  };
+  const isDefault = body.is_default === true;
+
+  if (!address.full_name || !address.phone || !address.street_address || !address.city || !address.province || !address.postal_code) {
     return NextResponse.json(
       { success: false, error: "Required address fields are missing." },
       { status: 400 }
@@ -47,7 +69,7 @@ export async function POST(request: Request) {
   }
 
   // If setting as default, clear existing defaults
-  if (is_default) {
+  if (isDefault) {
     await supabase
       .from("addresses")
       .update({ is_default: false })
@@ -56,23 +78,13 @@ export async function POST(request: Request) {
 
   const { data, error } = await supabase
     .from("addresses")
-    .insert({
-      user_id: user.id,
-      label: label || "Home",
-      full_name,
-      phone,
-      street_address,
-      city,
-      province,
-      postal_code,
-      country: country || "Philippines",
-      is_default: Boolean(is_default),
-    })
+    .insert({ ...address, user_id: user.id, is_default: isDefault })
     .select()
     .single();
 
   if (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error("Failed to save address:", error.code);
+    return NextResponse.json({ success: false, error: "We couldn't save your address." }, { status: 500 });
   }
 
   return NextResponse.json({ success: true, address: data });
@@ -91,7 +103,7 @@ export async function DELETE(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
-  if (!id) {
+  if (!id || !UUID_RE.test(id)) {
     return NextResponse.json({ success: false, error: "Missing address id" }, { status: 400 });
   }
 
@@ -102,7 +114,8 @@ export async function DELETE(request: Request) {
     .eq("user_id", user.id);
 
   if (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error("Failed to delete address:", error.code);
+    return NextResponse.json({ success: false, error: "We couldn't delete that address." }, { status: 500 });
   }
 
   return NextResponse.json({ success: true });

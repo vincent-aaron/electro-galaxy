@@ -15,7 +15,7 @@ export async function GET() {
     .order("created_at", { ascending: false });
 
   if (listError) {
-    return NextResponse.json({ error: listError.message }, { status: 400 });
+    return NextResponse.json({ error: "The request could not be completed." }, { status: 400 });
   }
 
   return NextResponse.json({ products: data ?? [] });
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
   if (insertError || !product) {
     return NextResponse.json(
-      { error: insertError?.message || "Failed to create product." },
+      { error: "Failed to create product." },
       { status: 400 }
     );
   }

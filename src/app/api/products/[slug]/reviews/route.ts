@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { moderateText } from "@/lib/moderation";
+import { readJsonBody } from "@/lib/api-guard";
 import { rateLimit } from "@/lib/rate-limit";
 
 const REVIEW_COLUMNS = "id, rating, title, comment, reviewer_name, is_verified, created_at";
@@ -38,7 +39,8 @@ export async function GET(_request: Request, { params }: Params) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    console.error("Failed to load reviews:", error.code);
+    return NextResponse.json({ error: "We couldn't load reviews." }, { status: 500 });
   }
 
   const reviews = data ?? [];
@@ -83,17 +85,13 @@ export async function POST(request: Request, { params }: Params) {
     );
   }
 
-  if (!rateLimit(`review:${user.id}`, 5, 60 * 60 * 1000)) {
+  if (!(await rateLimit(`review:${user.id}`, 5, 60 * 60 * 1000))) {
     return NextResponse.json({ error: "Too many reviews. Please try again later." }, { status: 429 });
   }
 
   // 2) Parse & validate body
-  let body: { rating?: unknown; title?: unknown; comment?: unknown };
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-  }
+  const { data: body, response } = await readJsonBody(request, 8 * 1024);
+  if (response) return response;
 
   const rating = Number(body.rating);
   const title = typeof body.title === "string" ? body.title.trim().slice(0, 100) : "";
@@ -168,7 +166,7 @@ export async function POST(request: Request, { params }: Params) {
     .single();
 
   if (insertError || !review) {
-    console.error("Failed to save review:", insertError?.message);
+    console.error("Failed to save review:", insertError?.code);
     // 23505 = unique (product_id, user_id): a review was posted in parallel.
     return insertError?.code === "23505"
       ? NextResponse.json({ error: "You already reviewed this product." }, { status: 409 })

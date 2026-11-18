@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import {
-  ShieldAlert,
-  LogIn,
   LayoutDashboard,
   Package,
   Tags,
@@ -33,41 +31,8 @@ function AdminBadge() {
   );
 }
 
-export function AdminShell({
-  children,
-  admin,
-  error,
-}: {
-  children: React.ReactNode;
-  admin: boolean;
-  error?: string | null;
-}) {
+export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-
-  if (!admin) {
-    return (
-      <div className="container-main flex min-h-[70vh] items-center justify-center py-16">
-        <div className="card-surface w-full max-w-md p-8 text-center">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10">
-            <ShieldAlert className="h-9 w-9 text-red-400" />
-          </div>
-          <h1 className="text-xl font-bold text-white">Admin Access Required</h1>
-          <p className="mt-3 text-sm leading-relaxed text-gray-400">
-            {error ||
-              "This area is restricted to store administrators. Sign in with an admin account to manage Electro Galaxy."}
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href="/auth/login" className="btn-primary">
-              <LogIn className="mr-2 h-4 w-4" /> Sign In
-            </Link>
-            <Link href="/" className="btn-secondary">
-              Back to Store
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container-main py-6 sm:py-8">

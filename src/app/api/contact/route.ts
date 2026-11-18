@@ -1,23 +1,21 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
+import { readJsonBody } from "@/lib/api-guard";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
-  if (!rateLimit(`contact:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+  if (!(await rateLimit(`contact:${clientIp(request)}`, 5, 10 * 60 * 1000))) {
     return NextResponse.json(
       { error: "Too many messages. Please try again in a few minutes." },
       { status: 429 }
     );
   }
 
-  let body: Record<string, unknown>;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-  }
+  const { data: body, response } = await readJsonBody(request, 16 * 1024);
+  if (response) return response;
 
   const field = (value: unknown) => (typeof value === "string" ? value.trim() : "");
   const name = field(body.name);
@@ -38,7 +36,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const supabase = await createClient();
+  // The service role is the only writer once security-hardening.sql is applied.
+  const supabase = createServiceClient() ?? (await createClient());
 
   if (supabase) {
     const { error } = await supabase.from("contact_messages").insert({
@@ -49,7 +48,7 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error("Failed to save contact message:", error.message);
+      console.error("Failed to save contact message:", error.code);
       return NextResponse.json(
         { error: "We couldn't send your message. Please try again later." },
         { status: 500 }

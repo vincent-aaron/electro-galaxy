@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const [step, setStep] = useState<"form" | "success">("form");
   const [loading, setLoading] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+  const [confirmedTotal, setConfirmedTotal] = useState<number | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [error, setError] = useState("");
   const [form, setForm] = useState({
@@ -74,6 +75,7 @@ export default function CheckoutPage() {
       }
 
       setOrderNumber(data.order_number);
+      setConfirmedTotal(typeof data.total === "number" ? data.total : null);
       clearCart();
       setStep("success");
     } catch {
@@ -91,6 +93,11 @@ export default function CheckoutPage() {
         <p className="mb-2 text-gray-400">Nothing was charged and nothing will be shipped.</p>
         <p className="mb-8 text-sm text-gray-500">
           Demo order number: <span className="font-mono text-galaxy-gold">{orderNumber}</span>
+          {confirmedTotal !== null && (
+            <>
+              {" "}&middot; Total: <span className="font-semibold text-galaxy-gold">{formatPrice(confirmedTotal)}</span>
+            </>
+          )}
         </p>
         <div className="flex justify-center gap-4">
           <Link href="/account/orders" className="btn-primary px-8 py-3">View Orders</Link>

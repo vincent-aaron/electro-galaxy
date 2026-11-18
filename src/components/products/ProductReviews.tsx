@@ -71,7 +71,7 @@ export function ProductReviews({ slug, fallbackRating, fallbackCount }: ReviewsP
   const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
-    setSignedIn(Boolean(getUser()));
+    getUser().then((user) => setSignedIn(Boolean(user)));
     fetch(`/api/products/${slug}/reviews`)
       .then((res) => res.json())
       .then((data) => {

@@ -37,7 +37,7 @@ export async function PUT(request: Request, { params }: Params) {
 
   if (updateError || !cat) {
     return NextResponse.json(
-      { error: updateError?.message || "Failed to update category." },
+      { error: "Failed to update category." },
       { status: 400 }
     );
   }
@@ -56,7 +56,7 @@ export async function DELETE(_request: Request, { params }: Params) {
   const { error: deleteError } = await supabase.from("categories").delete().eq("id", id);
 
   if (deleteError) {
-    return NextResponse.json({ error: deleteError.message }, { status: 400 });
+    return NextResponse.json({ error: "The request could not be completed." }, { status: 400 });
   }
 
   return NextResponse.json({ success: true });

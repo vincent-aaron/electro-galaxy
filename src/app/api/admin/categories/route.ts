@@ -15,7 +15,7 @@ export async function GET() {
     .order("sort_order");
 
   if (listError) {
-    return NextResponse.json({ error: listError.message }, { status: 400 });
+    return NextResponse.json({ error: "The request could not be completed." }, { status: 400 });
   }
 
   return NextResponse.json({ categories: data ?? [] });
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
 
   if (insertError || !cat) {
     return NextResponse.json(
-      { error: insertError?.message || "Failed to create category." },
+      { error: "Failed to create category." },
       { status: 400 }
     );
   }

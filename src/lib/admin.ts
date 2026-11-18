@@ -20,7 +20,7 @@ export async function requireAdmin(): Promise<AdminResult> {
       error: NextResponse.json(
         {
           error:
-            "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY, run supabase/admin-policies.sql, then sign in as an admin.",
+            "The store database is not configured.",
         },
         { status: 503 }
       ),

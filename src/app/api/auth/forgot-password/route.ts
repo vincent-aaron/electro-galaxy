@@ -1,24 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { readJsonBody } from "@/lib/api-guard";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { getSiteUrl } from "@/lib/site-url";
 
 const successMessage = "If an account exists for that email, a recovery link has been sent.";
 
 export async function POST(request: NextRequest) {
-  if (!rateLimit(`forgot:${clientIp(request)}`, 5, 15 * 60 * 1000)) {
+  if (!(await rateLimit(`forgot:${clientIp(request)}`, 5, 15 * 60 * 1000))) {
     return NextResponse.json({ error: "Too many requests. Please try again in a few minutes." }, { status: 429 });
   }
 
-  let email = "";
+  const { data: body, response } = await readJsonBody(request, 2 * 1024);
+  if (response) return response;
 
-  try {
-    const body = await request.json();
-    email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-  } catch {
-    return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
-  }
-
-  if (!/^\S+@\S+\.\S+$/.test(email)) {
+  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  if (email.length > 200 || !/^\S+@\S+\.\S+$/.test(email)) {
     return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
   }
 
@@ -30,15 +27,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const origin = new URL(request.url).origin;
+  // The link always points at this site's configured address, never at a
+  // host taken from the request.
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/reset-password`,
+    redirectTo: `${getSiteUrl()}/auth/reset-password`,
   });
 
-  if (error) {
-    console.error("Password recovery email error:", error.message);
-    return NextResponse.json({ error: "We could not send the recovery email. Please try again." }, { status: 500 });
-  }
+  // The reply is the same either way, so it can't reveal who has an account.
+  if (error) console.error("Password recovery email error:", error.status);
 
   return NextResponse.json({ message: successMessage });
 }

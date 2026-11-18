@@ -47,7 +47,7 @@ export async function PUT(request: Request, { params }: Params) {
 
   if (updateError || !product) {
     return NextResponse.json(
-      { error: updateError?.message || "Failed to update product." },
+      { error: "Failed to update product." },
       { status: 400 }
     );
   }
@@ -91,7 +91,7 @@ export async function DELETE(_request: Request, { params }: Params) {
   const { error: deleteError } = await supabase.from("products").delete().eq("id", id);
 
   if (deleteError) {
-    return NextResponse.json({ error: deleteError.message }, { status: 400 });
+    return NextResponse.json({ error: "The request could not be completed." }, { status: 400 });
   }
 
   return NextResponse.json({ success: true });

@@ -40,7 +40,7 @@ export default function AccountPage() {
   const [user, setUser] = useState<StoredUser | null>(null);
 
   useEffect(() => {
-    setUser(getUser());
+    getUser().then(setUser);
   }, []);
 
   const handleSignOut = async () => {

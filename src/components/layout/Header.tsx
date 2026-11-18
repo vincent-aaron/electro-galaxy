@@ -12,12 +12,11 @@ import {
   ChevronDown,
   Heart,
   Package,
-  Shield,
 } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/Logo";
-import { getUser, signOut } from "@/lib/auth";
+import { getUser, signOut, type StoredUser } from "@/lib/auth";
 import type { Category } from "@/types/database";
 
 interface HeaderProps {
@@ -31,12 +30,12 @@ export function Header({ categories }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [user, setUser] = useState<ReturnType<typeof getUser>>(null);
+  const [user, setUser] = useState<StoredUser | null>(null);
   const itemCount = useCartStore((s) => s.getItemCount());
 
   useEffect(() => {
     setMounted(true);
-    setUser(getUser());
+    getUser().then(setUser);
   }, [pathname]);
 
   const handleSignOut = async () => {
@@ -102,10 +101,6 @@ export function Header({ categories }: HeaderProps) {
           <div className="ml-auto flex items-center gap-1 sm:gap-3">
             <Link href="/account/wishlist" className="btn-ghost hidden sm:inline-flex">
               <Heart className="h-5 w-5" />
-            </Link>
-            <Link href="/admin" className="btn-ghost hidden sm:inline-flex text-xs text-gray-400 hover:text-galaxy-gold">
-              <Shield className="h-4 w-4" />
-              <span className="ml-1 hidden lg:inline">Admin</span>
             </Link>
 {user ? (
               <>

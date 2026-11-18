@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
+import { readJsonBody, UUID_RE } from "@/lib/api-guard";
 import { generateOrderNumber } from "@/lib/utils";
 import { containsCardNumber } from "@/lib/card-check";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 const PAYMENT_METHODS = ["cod", "gcash", "maya", "credit_card", "bank_transfer"] as const;
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface OrderPayload {
   items?: { product_id?: unknown; quantity?: unknown }[];
@@ -36,7 +37,8 @@ export async function GET() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Failed to load orders:", error.code);
+    return NextResponse.json({ error: "We couldn't load your orders." }, { status: 500 });
   }
 
   return NextResponse.json({ orders: data || [] });
@@ -45,26 +47,21 @@ export async function GET() {
 /**
  * Places an order. The client only sends product IDs + quantities and the
  * shipping details; prices, totals, product names/images and the order number
- * are decided by the database (`place_order` in supabase/admin-policies.sql),
- * which also decrements stock in the same transaction.
+ * are decided by the database, which also decrements stock in the same
+ * transaction. `place_order_for_user` (supabase/security-hardening.sql) can only
+ * be called from this server; `place_order` is the older, public equivalent.
  */
 export async function POST(request: Request) {
-  if (!rateLimit(`orders:${clientIp(request)}`, 10, 10 * 60 * 1000)) {
+  if (!(await rateLimit(`orders:${clientIp(request)}`, 10, 10 * 60 * 1000))) {
     return NextResponse.json(
       { success: false, error: "Too many demo orders. Please try again in a few minutes." },
       { status: 429 }
     );
   }
 
-  let body: OrderPayload;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json(
-      { success: false, error: "Invalid request body." },
-      { status: 400 }
-    );
-  }
+  const { data: parsedBody, response } = await readJsonBody(request, 32 * 1024);
+  if (response) return response;
+  const body = parsedBody as OrderPayload;
 
   if (!Array.isArray(body.items) || body.items.length === 0 || body.items.length > 50) {
     return NextResponse.json(
@@ -141,15 +138,27 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data, error } = await supabase.rpc("place_order", {
+  const orderArgs = {
     p_items: items,
     p_shipping_address: shippingAddress,
     p_payment_method: paymentMethod,
     p_notes: notes || null,
-  });
+  };
 
-  if (error || !data) {
-    console.error("Failed to place order:", error?.message);
+  // The signed-in user comes from the verified session, never from the request.
+  const { data: { user } } = await supabase.auth.getUser();
+  const service = createServiceClient();
+  let result = service
+    ? await service.rpc("place_order_for_user", { p_user_id: user?.id ?? null, ...orderArgs })
+    : null;
+  // PGRST202 = function not installed yet (security-hardening.sql not applied).
+  if (!result || result.error?.code === "PGRST202") {
+    result = await supabase.rpc("place_order", orderArgs);
+  }
+  const { data: placed, error } = result;
+
+  if (error || !placed) {
+    console.error("Failed to place order:", error?.code);
     // P0001 = a RAISE EXCEPTION message from place_order, written for shoppers.
     const message =
       error?.code === "P0001"
@@ -158,5 +167,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: message }, { status: error?.code === "P0001" ? 400 : 500 });
   }
 
-  return NextResponse.json({ success: true, order_number: (data as { order_number: string }).order_number });
+  const order = placed as { order_number: string; total: number };
+  return NextResponse.json({ success: true, order_number: order.order_number, total: order.total });
 }
