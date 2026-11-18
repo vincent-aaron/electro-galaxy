@@ -3,7 +3,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 export const metadata = { title: "About" };
 
 const highlights = [
-  { stat: "Solo", label: "Designed and built by one developer" },
+  { stat: "Solo", label: "Designed and built by one developer with AI-assisted development" },
   { stat: "Next.js", label: "App Router, React and TypeScript" },
   { stat: "Supabase", label: "Postgres, auth and row level security" },
 ];

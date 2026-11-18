@@ -2,20 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-  Search,
-  ShoppingCart,
-  User,
-  Menu,
-  X,
-  ChevronDown,
-  Heart,
-  Package,
-} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Search, ShoppingCart, User, Menu, Heart } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/Logo";
+import { NavDrawer } from "@/components/layout/NavDrawer";
 import { getUser, signOut, type StoredUser } from "@/lib/auth";
 import type { Category } from "@/types/database";
 
@@ -23,19 +15,34 @@ interface HeaderProps {
   categories: Category[];
 }
 
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/products", label: "Shop" },
+  { href: "/products?featured=true", label: "Deals" },
+  { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
+];
+
 export function Header({ categories }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [categoryOpen, setCategoryOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<StoredUser | null>(null);
   const itemCount = useCartStore((s) => s.getItemCount());
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
   useEffect(() => {
+    let active = true;
     setMounted(true);
-    getUser().then(setUser);
+    getUser().then((current) => {
+      if (active) setUser(current);
+    });
+    return () => {
+      active = false;
+    };
   }, [pathname]);
 
   const handleSignOut = async () => {
@@ -50,17 +57,8 @@ export function Header({ categories }: HeaderProps) {
     if (searchQuery.trim()) {
       router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
-      setMobileOpen(false);
     }
   };
-
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/products", label: "Shop" },
-    { href: "/products?featured=true", label: "Deals" },
-    { href: "/services", label: "Services" },
-    { href: "/about", label: "About" },
-  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-galaxy-border bg-galaxy-dark/95 backdrop-blur-md">
@@ -77,118 +75,105 @@ export function Header({ categories }: HeaderProps) {
 
       {/* Main header */}
       <div className="container-main py-3">
-<div className="flex items-center gap-4 lg:gap-8">
-          {/* Logo */}
+        <div className="flex items-center gap-2 sm:gap-3 lg:gap-6">
+          <button
+            ref={menuButtonRef}
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            className="btn-ghost h-11 w-11 shrink-0 p-0"
+            aria-label="Open menu"
+            aria-haspopup="dialog"
+            aria-expanded={drawerOpen}
+            aria-controls="nav-drawer"
+          >
+            <Menu className="h-6 w-6" aria-hidden="true" />
+          </button>
+
           <Logo />
 
           {/* Search */}
-          <form onSubmit={handleSearch} className="hidden flex-1 md:flex">
+          <form onSubmit={handleSearch} role="search" className="hidden flex-1 md:flex">
             <div className="relative flex w-full max-w-2xl">
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for products, brands and more..."
+                aria-label="Search products"
                 className="input-field rounded-r-none py-3"
               />
-              <button type="submit" className="btn-primary rounded-l-none px-5">
-                <Search className="h-5 w-5" />
+              <button type="submit" className="btn-primary rounded-l-none px-5" aria-label="Search">
+                <Search className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
           </form>
 
           {/* Actions */}
-          <div className="ml-auto flex items-center gap-1 sm:gap-3">
-            <Link href="/account/wishlist" className="btn-ghost hidden sm:inline-flex">
-              <Heart className="h-5 w-5" />
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+            <Link href="/account/wishlist" className="btn-ghost hidden sm:inline-flex" aria-label="Wishlist">
+              <Heart className="h-5 w-5" aria-hidden="true" />
             </Link>
-{user ? (
+            {user ? (
               <>
-                <Link href="/account" className="btn-ghost hidden sm:inline-flex">
-                  <User className="h-5 w-5" />
-                  <span className="ml-1.5 hidden lg:inline">{user.full_name || user.email.split("@")[0]}</span>
+                <Link href="/account" className="btn-ghost hidden sm:inline-flex" aria-label="My account">
+                  <User className="h-5 w-5" aria-hidden="true" />
+                  <span className="ml-1.5 hidden max-w-32 truncate lg:inline">{user.full_name || user.email.split("@")[0]}</span>
                 </Link>
                 <button
+                  type="button"
                   onClick={handleSignOut}
-                  className="btn-ghost hidden sm:inline-flex text-xs text-gray-400 hover:text-red-400"
+                  className="btn-ghost hidden text-xs text-gray-400 hover:text-red-400 sm:inline-flex"
                 >
                   Sign Out
                 </button>
               </>
             ) : (
-              <Link href="/account" className="btn-ghost hidden sm:inline-flex">
-                <User className="h-5 w-5" />
+              <Link href="/account" className="btn-ghost hidden sm:inline-flex" aria-label="Account">
+                <User className="h-5 w-5" aria-hidden="true" />
                 <span className="ml-1.5 hidden lg:inline">Account</span>
               </Link>
             )}
-            <Link href="/cart" className="btn-ghost relative">
-              <ShoppingCart className="h-5 w-5" />
-{mounted && itemCount > 0 && (
+            <Link
+              href="/cart"
+              className="btn-ghost relative"
+              aria-label={mounted && itemCount > 0 ? `Cart, ${itemCount} items` : "Cart"}
+            >
+              <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+              {mounted && itemCount > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-galaxy-gold text-xs font-bold text-galaxy-black">
                   {itemCount > 99 ? "99+" : itemCount}
                 </span>
               )}
             </Link>
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="btn-ghost md:hidden"
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
           </div>
         </div>
 
         {/* Mobile search */}
-        <form onSubmit={handleSearch} className="mt-3 md:hidden">
+        <form onSubmit={handleSearch} role="search" className="mt-3 md:hidden">
           <div className="relative flex">
             <input
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..."
+              aria-label="Search products"
               className="input-field rounded-r-none"
             />
-            <button type="submit" className="btn-primary rounded-l-none px-4">
-              <Search className="h-4 w-4" />
+            <button type="submit" className="btn-primary rounded-l-none px-4" aria-label="Search">
+              <Search className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
         </form>
       </div>
 
       {/* Navigation */}
-      <nav className="hidden border-t border-galaxy-border md:block">
-        <div className="container-main flex items-center gap-1 py-0">
-          {/* Categories dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setCategoryOpen(true)}
-            onMouseLeave={() => setCategoryOpen(false)}
-          >
-            <button className="flex items-center gap-1 px-4 py-3 text-sm font-medium text-white hover:text-galaxy-gold">
-              <Package className="h-4 w-4" />
-              Categories
-              <ChevronDown className={cn("h-4 w-4 transition-transform", categoryOpen && "rotate-180")} />
-            </button>
-            {categoryOpen && (
-              <div className="absolute left-0 top-full z-50 w-64 rounded-b-xl border border-galaxy-border bg-galaxy-card py-2 shadow-card animate-fade-in">
-                {categories.map((cat) => (
-                  <Link
-                    key={cat.id}
-                    href={`/products?category=${cat.slug}`}
-                    className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-galaxy-dark hover:text-galaxy-gold"
-                  >
-                    {cat.name}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
+      <nav aria-label="Main" className="hidden border-t border-galaxy-border md:block">
+        <div className="container-main flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              aria-current={pathname === link.href ? "page" : undefined}
               className={cn(
                 "px-4 py-3 text-sm font-medium transition-colors hover:text-galaxy-gold",
                 pathname === link.href ? "text-galaxy-gold" : "text-gray-300"
@@ -200,52 +185,16 @@ export function Header({ categories }: HeaderProps) {
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="border-t border-galaxy-border bg-galaxy-dark md:hidden animate-slide-up">
-          <div className="container-main space-y-1 py-4">
-            <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Categories</p>
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/products?category=${cat.slug}`}
-                onClick={() => setMobileOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-galaxy-card hover:text-galaxy-gold"
-              >
-                {cat.name}
-              </Link>
-            ))}
-            <hr className="my-2 border-galaxy-border" />
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  "block rounded-lg px-3 py-2.5 text-sm hover:bg-galaxy-card",
-                  pathname === link.href ? "text-galaxy-gold" : "text-gray-300"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-<Link href="/account" onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-galaxy-card">
-              My Account
-            </Link>
-            {user && (
-              <button
-                onClick={() => { handleSignOut(); setMobileOpen(false); }}
-                className="block w-full rounded-lg px-3 py-2.5 text-left text-sm text-red-400 hover:bg-galaxy-card"
-              >
-                Sign Out
-              </button>
-            )}
-            <Link href="/contact" onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-galaxy-card">
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      )}
+      <NavDrawer
+        open={drawerOpen}
+        onClose={closeDrawer}
+        categories={categories}
+        navLinks={navLinks}
+        pathname={pathname}
+        signedIn={Boolean(user)}
+        onSignOut={handleSignOut}
+        returnFocusRef={menuButtonRef}
+      />
     </header>
   );
 }
