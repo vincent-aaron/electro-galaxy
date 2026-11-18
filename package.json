@@ -35,8 +35,12 @@
     "typescript": "^5.7.3"
   },
   "overrides": {
+    "glob": "^13.0.0",
     "next": {
       "postcss": "^8.5.25"
     }
+  },
+  "allowScripts": {
+    "esbuild": false
   }
 }
