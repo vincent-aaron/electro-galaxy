@@ -132,7 +132,7 @@ const products: SeedProduct[] = [
     review_count: 89,
     is_featured: true,
     specs: { capacity: "32L", power: "1000W", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600",
+    image_url: "https://images.unsplash.com/photo-1596552183299-000ef779e88d?rect=820,535,1600,1600&w=600",
   },
   {
     category_slug: "office-appliances",
@@ -294,7 +294,7 @@ const products: SeedProduct[] = [
     review_count: 892,
     is_featured: true,
     specs: { capacity: "6Qt", functions: "7", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=600",
+    image_url: "https://images.unsplash.com/photo-1544233726-9f1d2b27be8b?w=600",
   },
   {
     category_slug: "smart-appliances",
@@ -312,7 +312,7 @@ const products: SeedProduct[] = [
     review_count: 1205,
     is_featured: false,
     specs: { speaker: '1.73"', sensor: "Temperature", warranty: "1 year" },
-    image_url: "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=600",
+    image_url: "https://images.unsplash.com/photo-1568910748155-01ca989dbdd6?w=600",
   },
 ];
 

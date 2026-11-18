@@ -873,7 +873,7 @@ SELECT id,
   CASE
     slug
     WHEN 'samsung-smart-refrigerator-500l' THEN 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=600'
-    WHEN 'lg-microwave-oven-32l' THEN 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600'
+    WHEN 'lg-microwave-oven-32l' THEN 'https://images.unsplash.com/photo-1596552183299-000ef779e88d?rect=820,535,1600,1600&w=600'
     WHEN 'hp-laserjet-pro-m404dn' THEN 'https://images.unsplash.com/photo-1650094980833-7373de26feb6?w=600'
     WHEN 'dell-ultrasharp-27-monitor' THEN 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600'
     WHEN 'google-nest-hub-max' THEN 'https://images.unsplash.com/photo-1558002038-1055907df827?w=600'
@@ -882,8 +882,8 @@ SELECT id,
     WHEN 'jbl-flip-6-bluetooth-speaker' THEN 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600'
     WHEN 'philips-sonicare-diamondclean' THEN 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=600'
     WHEN 'dyson-supersonic-hair-dryer' THEN 'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=600'
-    WHEN 'instant-pot-duo-7in1' THEN 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=600'
-    WHEN 'amazon-echo-dot-5th-gen' THEN 'https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=600'
+    WHEN 'instant-pot-duo-7in1' THEN 'https://images.unsplash.com/photo-1544233726-9f1d2b27be8b?w=600'
+    WHEN 'amazon-echo-dot-5th-gen' THEN 'https://images.unsplash.com/photo-1568910748155-01ca989dbdd6?w=600'
   END,
   name,
   0,
